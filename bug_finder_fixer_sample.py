@@ -60,7 +60,7 @@ def get_func_calls(target):
 
 def bug_finder_pattern_example():
     """
-    this is the bug finder function specif for the pattern that we want to find, you need to implement one function
+    this is the bug finder function specific for the pattern that we want to find, you need to implement one function
     like this for each pattern
 
     As an example I invented the pattern that checks if activation='relu' and the "units" are not a multiple of 32
@@ -83,7 +83,7 @@ def bug_finder_pattern_example():
         args = arguments[i]
         if len(args) >= 2:  # we check if there are at least two arguments/keywords
             if isinstance(args[0], ast.Constant):  # the first should be a constants
-                if int(args[0].value) % 32 != 0:  # if is not a multiple of 32 I check if teh activation is relu
+                if int(args[0].value) % 32 != 0:  # if is not a multiple of 32 I check if the activation is relu
                     for arg in args:
                         if isinstance(arg, ast.keyword):
                             if arg.arg == 'activation' and arg.value.value == "relu":
@@ -93,6 +93,8 @@ def bug_finder_pattern_example():
                                 return func_calls[i]
     print("did not find any API misuses!")
     return None
+
+
 
 
 def bug_fixer_pattern_example(buggy_node):
