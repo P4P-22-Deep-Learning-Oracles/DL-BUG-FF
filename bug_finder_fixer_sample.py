@@ -96,7 +96,13 @@ def bug_finder_pattern_example():
 
 
 def image_decode_bug_finder():
+    print("Searching for API misuse for decode_jpeg where API call only has access to filename and not a String Tensor...")
     func_calls, arguments = get_func_calls('tf.image.decode_jpeg')
+    for i in range(len(func_calls)):
+        args = arguments[i]
+        if isinstance(args[0], ast.Constant):
+
+
 
     return func_calls[1]
 
