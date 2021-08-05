@@ -95,6 +95,11 @@ def bug_finder_pattern_example():
     return None
 
 
+def image_decode_bug_finder():
+    func_calls, arguments = get_func_calls('tf.image.decode_jpeg')
+
+    return func_calls[1]
+
 
 
 def bug_fixer_pattern_example(buggy_node):
