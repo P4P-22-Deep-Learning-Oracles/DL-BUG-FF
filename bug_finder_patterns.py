@@ -44,9 +44,15 @@ def decode_png_bug_pattern(tree):
     are used to decode files of type .png. This will not throw an error but will potentially cause
     issues when the model is trying to understand the decoded image.
 
-    To solve this issue we will be checking the file extension of the first parameter of decode_jpeg().
-    If it is .png we will try and replace decode_jpeg() with decode_image() instead which generally works
-    for both .jpeg and .png files
+    To solve this issue we will be checking for instances of decode_jpeg() and trying
+    to replace them with decode_image() instead, which generally works for both .jpeg
+    and .png files. There is one problem where decode_image() cannot be used in conjunction
+    with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
+    present we will not make the change.
     """
     print("Searching for API misuse where decode_jpeg is called for files of type PNG")
+    func_calls, arguments = get_func_calls('decode_jpeg', tree)
+    for i in range(len(func_calls)):
+        args = arguments[i]
+        if 
     return None
