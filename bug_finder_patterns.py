@@ -36,3 +36,17 @@ def bug_finder_pattern_example(tree):
                                 return func_calls[i]
     print("did not find any API misuses!")
     return None
+
+
+def decode_png_bug_pattern(tree):
+    """
+    This pattern deals with the common bug where tf.image.decode_jpeg() or tf.io.decode_jpeg()
+    are used to decode files of type .png. This will not throw an error but will potentially cause
+    issues when the model is trying to understand the decoded image.
+
+    To solve this issue we will be checking the file extension of the first parameter of decode_jpeg().
+    If it is .png we will try and replace decode_jpeg() with decode_image() instead which generally works
+    for both .jpeg and .png files
+    """
+    print("Searching for API misuse where decode_jpeg is called for files of type PNG")
+    return None
