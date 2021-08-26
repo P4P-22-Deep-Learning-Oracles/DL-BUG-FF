@@ -1,7 +1,7 @@
 import ast
 from collections import deque
 import bug_finder_patterns
-from bug_fixer import *
+import bug_fixer
 
 
 class FuncCallVisitor(ast.NodeVisitor):
@@ -102,6 +102,24 @@ if __name__ == '__main__':
         print("==============================")
         print("DL-BUG_FIXER")
         print("==============================")
+        patternCount = 0;
+        for i in dir(bug_fixer):
+            # Get the attributes
+            pattern = getattr(bug_fixer, i)
+            # If it's a function then call that function
+            if callable(pattern) and i.startswith('pattern'):
+                # Store list of bugs and then append that list to the overall list
+                # if bugList is empty continue to the next element in bugList
+                if bugList[patternCount] is None:
+                    patternCount += 1
+                    continue
+
+                for j in bugList[patternCount]:
+                    pattern(j, tree)
+                patternCount += 1
         print()
         print("the fixed version of the program is")
         print(ast.unparse(tree))
+    else:
+        print("No known bugs found")
+
