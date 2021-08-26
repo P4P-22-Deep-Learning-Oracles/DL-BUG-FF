@@ -1,6 +1,7 @@
 import ast
 from bug_finder_util import get_func_calls
 
+
 def bug_finder_pattern_example(tree):
     """
     this is the bug finder function specific for the pattern that we want to find, you need to implement one function
@@ -38,7 +39,7 @@ def bug_finder_pattern_example(tree):
     return None
 
 
-def decode_png_bug_pattern(tree):
+def decode_png_no_resize_bug_pattern(tree):
     """
     This pattern deals with the common bug where tf.image.decode_jpeg() or tf.io.decode_jpeg()
     are used to decode files of type .png. This will not throw an error but will potentially cause
@@ -51,8 +52,15 @@ def decode_png_bug_pattern(tree):
     present we will not make the change.
     """
     print("Searching for API misuse where decode_jpeg is called for files of type PNG")
+    decode_jpeg_list = []
     func_calls, arguments = get_func_calls('decode_jpeg', tree)
     for i in range(len(func_calls)):
         args = arguments[i]
-        if 
+        # Look for instances of resize() or resize_images()
+        resize_func_calls, resize_arguments = get_func_calls('resize', tree)
+        resize_images_func_calls, resize_images_arguments = get_func_calls('resize_images', tree)
+        # If any found then exit
+        if len(resize_func_calls) > 0 or len(resize_images_func_calls) > 0:
+            return None
+        decode_jpeg_list.append(func_calls[i])
     return None
