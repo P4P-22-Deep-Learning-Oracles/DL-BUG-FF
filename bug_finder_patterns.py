@@ -67,7 +67,7 @@ def pattern_decode_png_with_resize_bug(tree):
     jpeg_func_calls, jpeg_arguments = get_func_calls('decode_jpeg', tree)
     if len(jpeg_func_calls) == 0:
         return None
-    
+
     resize_func_calls, resize_arguments = get_func_calls('resize', tree)
     for i in range(len(resize_func_calls)):
         decode_jpeg_with_resize_list.append(resize_func_calls[i])
