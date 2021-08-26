@@ -47,20 +47,25 @@ def decode_png_no_resize_bug_pattern(tree):
 
     To solve this issue we will be checking for instances of decode_jpeg() and trying
     to replace them with decode_image() instead, which generally works for both .jpeg
-    and .png files. There is one problem where decode_image() cannot be used in conjunction
-    with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
-    present we will not make the change.
+    and .png files.
     """
     print("Searching for API misuse where decode_jpeg is called for files of type PNG")
     decode_jpeg_list = []
     func_calls, arguments = get_func_calls('decode_jpeg', tree)
     for i in range(len(func_calls)):
-        args = arguments[i]
-        # Look for instances of resize() or resize_images()
-        resize_func_calls, resize_arguments = get_func_calls('resize', tree)
-        resize_images_func_calls, resize_images_arguments = get_func_calls('resize_images', tree)
-        # If any found then exit
-        if len(resize_func_calls) > 0 or len(resize_images_func_calls) > 0:
-            return None
         decode_jpeg_list.append(func_calls[i])
-    return None
+    return decode_jpeg_list
+
+
+def decode_png_with_resize_bug_pattern(tree):
+    """
+    There is one problem where decode_image() cannot be used in conjunction
+    with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
+    present we will make the appropriate change to those calls as well.
+    """
+    decode_jpeg_with_resize_list = []
+    resize_func_calls, resize_arguments = get_func_calls('resize', tree)
+    for i in range(len(resize_func_calls)):
+        decode_jpeg_with_resize_list.append(resize_func_calls[i])
+
+    return decode_jpeg_with_resize_list
