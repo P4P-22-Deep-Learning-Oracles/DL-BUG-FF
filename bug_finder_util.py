@@ -1,6 +1,6 @@
 import ast
 from collections import deque
-from bug_finder_patterns import *
+import bug_finder_patterns
 from bug_fixer import *
 
 
@@ -87,14 +87,17 @@ if __name__ == '__main__':
     print("Converting " + filename + " into AST")
     print()
     # find the pattern
-    buggy_node = bug_finder_pattern_example(tree)
-    if buggy_node is not None:
+    bugList = []
+    for i in dir(bug_finder_patterns):
+        pattern = getattr(bug_finder_patterns, i)
+        if callable(pattern):
+            patternBugs = pattern(tree)
+            bugList.append(patternBugs)
+    if bugList is not None:
         print()
         print("==============================")
         print("DL-BUG_FIXER")
         print("==============================")
-        # if I find it I fix it
-        bug_fixer_pattern_example(buggy_node, tree)
         print()
         print("the fixed version of the program is")
         print(ast.unparse(tree))
