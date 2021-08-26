@@ -93,7 +93,7 @@ if __name__ == '__main__':
         # Get the attributes
         pattern = getattr(bug_finder_patterns, i)
         # If it's a function then call that function
-        if callable(pattern):
+        if callable(pattern) and i.startswith('pattern'):
             # Store list of bugs and then append that list to the overall list
             patternBugs = pattern(tree)
             bugList.append(patternBugs)
