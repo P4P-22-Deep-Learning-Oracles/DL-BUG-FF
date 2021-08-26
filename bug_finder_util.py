@@ -102,7 +102,7 @@ if __name__ == '__main__':
         print("==============================")
         print("DL-BUG_FIXER")
         print("==============================")
-        patternCount = 0;
+        patternCount = 0
         for i in dir(bug_fixer):
             # Get the attributes
             pattern = getattr(bug_fixer, i)
