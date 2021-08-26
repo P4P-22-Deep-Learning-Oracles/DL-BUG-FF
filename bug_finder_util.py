@@ -88,9 +88,13 @@ if __name__ == '__main__':
     print()
     # find the pattern
     bugList = []
+    # Search for everything in bug_finder_patterns and iterate through
     for i in dir(bug_finder_patterns):
+        # Get the attributes
         pattern = getattr(bug_finder_patterns, i)
+        # If it's a function then call that function
         if callable(pattern):
+            # Store list of bugs and then append that list to the overall list
             patternBugs = pattern(tree)
             bugList.append(patternBugs)
     if bugList is not None:
