@@ -73,3 +73,19 @@ def pattern_decode_png_with_resize_bug(tree):
         decode_jpeg_with_resize_list.append(resize_func_calls[i])
 
     return decode_jpeg_with_resize_list
+
+
+def pattern_merge_all_summaries_bug(tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.merge_all_summaries should now be tf.summary.merge_all
+    """
+    merge_all_summaries_list = []
+    merge_all_func_calls, merge_all_arguments = get_func_calls('merge_all_summaries', tree)
+    for i in range(len(merge_all_func_calls)):
+        merge_all_summaries_list.append(merge_all_func_calls[i])
+
+    return merge_all_summaries_list
