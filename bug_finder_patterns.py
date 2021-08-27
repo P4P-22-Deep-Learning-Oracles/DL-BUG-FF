@@ -89,3 +89,19 @@ def pattern_merge_all_summaries_bug(tree):
         merge_all_summaries_list.append(merge_all_func_calls[i])
 
     return merge_all_summaries_list
+
+
+def pattern_initialize_variables_bug(tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.initialize_variables should now be tf.variables_initializer
+    """
+    initialize_variables_list = []
+    initialize_variables_func_calls, initialize_variables_arguments = get_func_calls('initialize_variables', tree)
+    for i in range(len(initialize_variables_func_calls)):
+        initialize_variables_list.append(initialize_variables_func_calls[i])
+
+    return initialize_variables_list
