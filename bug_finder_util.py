@@ -77,7 +77,8 @@ if __name__ == '__main__':
     print("==============================")
     while True:
         try:
-            filename = input("Please specify the file location of the source code:")
+            #filename = input("Please specify the file location of the source code:")
+            filename = "TS/1/1.py"
             # parse the AST
             tree = load_source_code(filename)
             break
