@@ -29,6 +29,8 @@ def pattern_decode_png_no_resize_bug(buggy_node, tree):
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.func.attr = "decode_image"
 
+
+
     return tree
 
 
@@ -38,4 +40,13 @@ def pattern_decode_png_with_resize_bug(buggy_node, tree):
     with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
     present we will make the appropriate change to those calls as well.
     """
-    print("Fixing decode_png resize error")
+    print("Fixing decode_png resize error - Not done")
+
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.func.value.attr = "image.resize_image_with_crop_or_pad"
+            node.args = [node.args[0], node.args[1].elts[0], node.args[1].elts[1]]
+
+    return tree
