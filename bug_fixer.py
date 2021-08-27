@@ -26,8 +26,12 @@ def pattern_decode_png_no_resize_bug(buggy_node, tree):
 
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
-        if isinstance(node, ast.FunctionType) and ast.dump(node) == ast.dump(buggy_node):
-            node.Name[0].value = "decode_image"
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            print(node._name)
+            node._name = "decode_image"
+            print(node._name)
+
+    return tree
 
 
 def pattern_decode_png_with_resize_bug(buggy_node, tree):

@@ -115,7 +115,7 @@ if __name__ == '__main__':
                     continue
 
                 for j in bugList[patternCount]:
-                    pattern(j, tree)
+                    tree = pattern(j, tree)
                 patternCount += 1
         print()
         print("the fixed version of the program is")
