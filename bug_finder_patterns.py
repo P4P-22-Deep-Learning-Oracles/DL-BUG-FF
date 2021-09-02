@@ -1,5 +1,5 @@
 import ast
-from bug_finder_util import get_func_calls
+from bug_ff_util import get_func_calls
 
 
 def pattern_bug_finder_example(tree):
