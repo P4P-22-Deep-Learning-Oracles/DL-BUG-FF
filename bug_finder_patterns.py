@@ -121,3 +121,28 @@ def pattern_summary_writer_bug(tree):
         summary_writer_list.append(summary_writer_func_calls[i])
 
     return summary_writer_list
+
+
+def pattern_last_dense_binary_bug(tree):
+    """
+    Checks that the final layer of Dense() is 2 if the class mode is set to binary. A common bug can be making this 3
+    which wont work with binary.
+    Tensorflow 1.0
+
+    Dense(3, activation='softmax')      ------->           Dense(2, activation='softmax')
+    """
+    dense_bug_list = []
+    last_dense_binary_func_calls, last_dense_binary_arguments = get_func_calls('Dense', tree)
+    flow_from_directory_func_calls, flow_from_directory_arguments = get_func_calls('flow_from_directory', tree)
+
+    for i in range(len(flow_from_directory_func_calls)):
+        for arg in flow_from_directory_arguments[i]:
+            if isinstance(arg, ast.keyword):
+                if arg.arg == "class_mode":
+                    if arg.value.value == "binary":
+                        final_call_args = last_dense_binary_arguments[len(last_dense_binary_func_calls) - 1]
+                        if isinstance(final_call_args[0], ast.Constant) and final_call_args[0].value == 3:
+                            dense_bug_list.append(last_dense_binary_func_calls[len(last_dense_binary_func_calls) - 1])
+                            return dense_bug_list
+    return dense_bug_list
+

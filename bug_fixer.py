@@ -46,7 +46,8 @@ def pattern_decode_png_with_resize_bug(buggy_node, tree):
         # we need to check if it is the buggy node found by the bug finder
 
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-            node.func.value.attr = "image.resize_image_with_crop_or_pad"
+            node.func.value.attr = "image"
+            node.func.attr = "resize_image_with_crop_or_pad"
             node.args = [node.args[0], node.args[1].elts[0], node.args[1].elts[1]]
 
     return tree
@@ -99,7 +100,23 @@ def pattern_summary_writer_bug(buggy_node, tree):
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-            node.func.value.attr = "train.SummaryWriter"
+            node.func.value.attr = "summary"
+            node.func.attr = "FileWriter"
 
     return tree
 
+
+def pattern_last_dense_binary_bug(buggy_node, tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.train.SummaryWriter         --------->             tf.summary.FileWriter
+    """
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.args[0].value = 2
+
+    return tree
