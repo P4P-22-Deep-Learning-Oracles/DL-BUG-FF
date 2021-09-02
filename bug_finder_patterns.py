@@ -75,6 +75,22 @@ def pattern_decode_png_with_resize_bug(tree):
     return decode_jpeg_with_resize_list
 
 
+def pattern_merge_summary_bug(tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.merge_summary should now be tf.summary.merge
+    """
+    merge_summary_list = []
+    merge_func_calls, merge_all_arguments = get_func_calls('merge_summary', tree)
+    for i in range(len(merge_func_calls)):
+        merge_summary_list.append(merge_func_calls[i])
+
+    return merge_summary_list
+
+
 def pattern_merge_all_summaries_bug(tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
@@ -91,17 +107,17 @@ def pattern_merge_all_summaries_bug(tree):
     return merge_all_summaries_list
 
 
-def pattern_initialize_variables_bug(tree):
+def pattern_summary_writer_bug(tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
     Tensorflow 1.0.
 
-    tf.initialize_variables should now be tf.variables_initializer
+    tf.train.SummaryWriter         --------->             tf.summary.FileWriter
     """
-    initialize_variables_list = []
-    initialize_variables_func_calls, initialize_variables_arguments = get_func_calls('initialize_variables', tree)
-    for i in range(len(initialize_variables_func_calls)):
-        initialize_variables_list.append(initialize_variables_func_calls[i])
+    summary_writer_list = []
+    summary_writer_func_calls, summary_writer_arguments = get_func_calls('SummaryWriter', tree)
+    for i in range(len(summary_writer_func_calls)):
+        summary_writer_list.append(summary_writer_func_calls[i])
 
-    return initialize_variables_list
+    return summary_writer_list
