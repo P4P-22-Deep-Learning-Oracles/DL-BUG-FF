@@ -67,18 +67,12 @@ def load_source_code(filename):
 
 
 if __name__ == '__main__':
-    # this is just n example, we should load and write the Tensorflow programs from files
-
-    # we assume this to be a misuse 12 should be replaced with 128 in
-    # tf.keras.layers.Dense(12, activation='relu'),
-
     print("==============================")
     print("DL-BUG_FINDER")
     print("==============================")
     while True:
         try:
-            #filename = input("Please specify the file location of the source code:")
-            filename = "TS/1/1Resize.py"
+            filename = input("Please specify the directory location of the project code:")
             # parse the AST
             tree = load_source_code(filename)
             break
@@ -87,6 +81,11 @@ if __name__ == '__main__':
 
     print("Converting " + filename + " into AST")
     print()
+    print("==============================")
+    print("ORIGINAL CODE")
+    print("==============================")
+    print(ast.unparse(tree))
+
     # find the pattern
     bugList = []
     # Search for everything in bug_finder_patterns and iterate through
