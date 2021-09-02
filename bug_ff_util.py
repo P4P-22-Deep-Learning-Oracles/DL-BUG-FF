@@ -78,7 +78,7 @@ if __name__ == '__main__':
     while True:
         try:
             #filename = input("Please specify the file location of the source code:")
-            filename = "TS/1/1Resize.py"
+            filename = "TS/2DepreciatedApi/MergeSummaries.py"
             # parse the AST
             tree = load_source_code(filename)
             break
@@ -111,7 +111,7 @@ if __name__ == '__main__':
             if callable(pattern) and i.startswith('pattern'):
                 # Store list of bugs and then append that list to the overall list
                 # if bugList is empty continue to the next element in bugList
-                if bugList[patternCount] is None:
+                if bugList[patternCount] is None or len(bugList[patternCount]) == 0:
                     patternCount += 1
                     continue
 
