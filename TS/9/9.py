@@ -60,9 +60,11 @@ class NeuralNet:
 
 
 X = np.array([ [0,0,1],[0,1,1],[1,0,1],[1,1,1]])
-y = np.array([[0],[1],[1],[0]]])
+y = np.array([[0],[1],[1],[0]])
 
 m = NeuralNet(10)
 m.fit(X, y)
 yp = m.predict(X)[:, 0]
-print accuracy_score(y, yp)
+print(accuracy_score(y, yp))
+
+

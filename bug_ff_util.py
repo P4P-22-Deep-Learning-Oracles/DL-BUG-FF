@@ -2,7 +2,7 @@ import ast
 from collections import deque
 import bug_finder_patterns
 import bug_fixer
-
+import os
 
 class FuncCallVisitor(ast.NodeVisitor):
     """
@@ -66,27 +66,26 @@ def load_source_code(filename):
     return tree_ting
 
 
-if __name__ == '__main__':
-    # this is just n example, we should load and write the Tensorflow programs from files
+def file_iterator(file):
+    for filename in os.listdir(file):
+        if os.path.isdir(file + "/" + filename):
+            file_iterator(file + "/" + filename)
+            continue
+        if filename.endswith(".py"):
+            tree = load_source_code(file + "/" + filename)
+            print("==============================")
+            print("ORIGINAL CODE")
+            print("==============================")
+            print(ast.unparse(tree))
+            bug_list = bug_finder(tree)
+            bug_fixer(tree, bug_list)
 
-    # we assume this to be a misuse 12 should be replaced with 128 in
-    # tf.keras.layers.Dense(12, activation='relu'),
 
+
+def bug_finder(tree):
     print("==============================")
     print("DL-BUG_FINDER")
     print("==============================")
-    while True:
-        try:
-            #filename = input("Please specify the file location of the source code:")
-            filename = "TS/2DepreciatedApi/MergeSummaries.py"
-            # parse the AST
-            tree = load_source_code(filename)
-            break
-        except FileNotFoundError:
-            print("Oops, sorry that file does not exist! Try again...")
-
-    print("Converting " + filename + " into AST")
-    print()
     # find the pattern
     bugList = []
     # Search for everything in bug_finder_patterns and iterate through
@@ -98,6 +97,11 @@ if __name__ == '__main__':
             # Store list of bugs and then append that list to the overall list
             patternBugs = pattern(tree)
             bugList.append(patternBugs)
+
+    return bugList
+
+
+def bug_fixer(tree, bugList):
     if bugList is not None:
         print()
         print("==============================")
@@ -123,4 +127,22 @@ if __name__ == '__main__':
         print(ast.unparse(tree))
     else:
         print("No known bugs found")
+
+
+if __name__ == '__main__':
+    print("==============================")
+    print("INPUT")
+    print("==============================")
+    while True:
+        filename = input("Please specify the directory location of the project code:")
+        # Check directory exists
+        if os.path.isdir(filename):
+            break
+        print("Oops, sorry that file does not exist or isn't a directory! Try again...")
+
+    # Iterate through all .py files in directory and sub-directories
+    file_iterator(filename)
+
+
+
 
