@@ -78,7 +78,7 @@ def file_iterator(file):
             print("==============================")
             print(ast.unparse(tree))
             bug_list = bug_finder(tree)
-            bug_fixer(tree, bug_list)
+            bug_fixer_func(tree, bug_list)
 
 
 
@@ -101,7 +101,7 @@ def bug_finder(tree):
     return bugList
 
 
-def bug_fixer(tree, bugList):
+def bug_fixer_func(tree, bugList):
     if bugList is not None:
         print()
         print("==============================")
