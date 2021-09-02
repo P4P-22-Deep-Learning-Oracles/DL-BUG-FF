@@ -66,35 +66,40 @@ def pattern_merge_summary_bug(buggy_node, tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.func.attr = "summary.merge"
-            print(node.args)
-#
-#
-# def pattern_merge_all_summaries_bug(buggy_node, tree):
-#     """
-#     As Tensorflow changes through versions, many API calls become deprecated. This
-#     is an example of an API call that is no longer supported with the update to
-#     Tensorflow 1.0.
-#
-#     tf.merge_all_summaries should now be tf.summary.merge_all
-#     """
-#     print("Fixing this API misuse where merge_all_summaries is called")
-#
-#     for node in ast.walk(tree):
-#         # we need to check if it is the buggy node found by the bug finder
-#         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-#             node.func.attr = "summary.merge_all"
-#
-#
-# def pattern_summary_writer_bug(buggy_node, tree):
-#     """
-#     As Tensorflow changes through versions, many API calls become deprecated. This
-#     is an example of an API call that is no longer supported with the update to
-#     Tensorflow 1.0.
-#
-#     tf.train.SummaryWriter         --------->             tf.summary.FileWriter
-#     """
-#     for node in ast.walk(tree):
-#         # we need to check if it is the buggy node found by the bug finder
-#         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-#             node.func.value.attr = "train.SummaryWriter"
+
+    return tree
+
+
+def pattern_merge_all_summaries_bug(buggy_node, tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.merge_all_summaries should now be tf.summary.merge_all
+    """
+    print("Fixing this API misuse where merge_all_summaries is called")
+
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.func.attr = "summary.merge_all"
+
+    return tree
+
+
+def pattern_summary_writer_bug(buggy_node, tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.train.SummaryWriter         --------->             tf.summary.FileWriter
+    """
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.func.value.attr = "train.SummaryWriter"
+
+    return tree
 
