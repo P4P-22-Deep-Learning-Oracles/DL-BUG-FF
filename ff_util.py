@@ -67,8 +67,8 @@ def get_assign_calls(target, tree):
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
-            for target in node.targets:
-                if target.id == target:
+            for targets in node.targets:
+                if targets.id == target:
                     target_assign_nodes.append(node)
 
     return target_assign_nodes
