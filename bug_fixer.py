@@ -29,8 +29,6 @@ def pattern_decode_png_no_resize_bug(buggy_node, tree):
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.func.attr = "decode_image"
 
-
-
     return tree
 
 

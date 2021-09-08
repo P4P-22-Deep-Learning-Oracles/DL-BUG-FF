@@ -141,7 +141,7 @@ def pattern_last_dense_binary_bug(tree):
                 if arg.arg == "class_mode":
                     if arg.value.value == "binary":
                         final_call_args = last_dense_binary_arguments[len(last_dense_binary_func_calls) - 1]
-                        if isinstance(final_call_args[0], ast.Constant) and final_call_args[0].value == 3:
+                        if isinstance(final_call_args[0], ast.Constant) and final_call_args[0].value != 2:
                             dense_bug_list.append(last_dense_binary_func_calls[len(last_dense_binary_func_calls) - 1])
                             return dense_bug_list
     return dense_bug_list
