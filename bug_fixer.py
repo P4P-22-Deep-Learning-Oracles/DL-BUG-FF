@@ -1,4 +1,5 @@
 import ast
+from ff_util import get_assign_calls
 
 
 def pattern_bug_fixer_example(buggy_node, tree):

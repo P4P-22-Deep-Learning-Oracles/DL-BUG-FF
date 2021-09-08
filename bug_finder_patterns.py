@@ -1,5 +1,5 @@
 import ast
-from bug_ff_util import get_func_calls
+from ff_util import get_func_calls
 
 
 def pattern_bug_finder_example(tree):
@@ -145,4 +145,25 @@ def pattern_last_dense_binary_bug(tree):
                             dense_bug_list.append(last_dense_binary_func_calls[len(last_dense_binary_func_calls) - 1])
                             return dense_bug_list
     return dense_bug_list
+
+
+def pattern_softmax_with_cross_entropy_bug(tree):
+    """
+    Checks for instances where tf.nn.softmax() is used in conjunction with cross_entropy(). In this case it is better
+    to use the combined method tf.nn.softmax_cross_entropy_with_logits() as it covers numerically unstable corner cases
+    in the mathematically right way.
+
+    sm = tf.nn.softmax(x)         ------>         sm_ce = tf.nn.softmax_cross_entropy_with_logits()
+    ce = tf.reduce_sum(sm)
+    """
+
+    softmax_with_entropy_list = []
+    softmax_func_calls, softmax_arguments = get_func_calls('softmax', tree)
+    cross_entropy_func_calls, cross_entropy_arguments = get_func_calls('reduce_sum', tree)
+
+    if len(softmax_func_calls) == 0 or len(cross_entropy_func_calls) == 0:
+        return softmax_with_entropy_list
+
+
+    return softmax_with_entropy_list
 
