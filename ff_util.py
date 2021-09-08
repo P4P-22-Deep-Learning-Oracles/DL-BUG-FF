@@ -72,3 +72,24 @@ def get_assign_calls(target, tree):
                     target_assign_nodes.append(node)
 
     return target_assign_nodes
+
+
+def get_assign_nodes_using_func(target, tree):
+    """
+    This function searches for all nodes of ast.Assign type and then checks that the
+    the nodes on the right of the assignment are of a specific function type "target"
+
+    returns a list of all instances of this
+    """
+    assign_node_list = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            if isinstance(node.value, ast.Call):
+                if node.value.func.attr == target:
+                    assign_node_list.append(node)
+            if isinstance(node.value, ast.UnaryOp):
+                if isinstance(node.value.operand, ast.Call):
+                    if node.value.operand.func.attr == target:
+                        assign_node_list.append(node)
+
+    return assign_node_list
