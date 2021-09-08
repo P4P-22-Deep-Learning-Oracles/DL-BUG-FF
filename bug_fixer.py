@@ -49,7 +49,18 @@ def pattern_decode_png_with_resize_bug(buggy_node, tree):
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.func.value.attr = "image"
             node.func.attr = "resize_image_with_crop_or_pad"
-            node.args = [node.args[0], node.args[1].elts[0], node.args[1].elts[1]]
+            if isinstance(node.args[1], ast.Name):
+                Name_assign_nodes = get_assign_calls(node.args[1].id, tree)
+                index = 0;
+                for assignNode in Name_assign_nodes:
+                    if assignNode.lineno > node.args[1].lineno:
+                        break;
+                    else:
+                        index += 1
+                variableArg = Name_assign_nodes[index-1]
+                node.args = [node.args[0], variableArg.value.elts[0], variableArg.value.elts[1]]
+            else:
+                node.args = [node.args[0], node.args[1].elts[0], node.args[1].elts[1]]
 
     return tree
 

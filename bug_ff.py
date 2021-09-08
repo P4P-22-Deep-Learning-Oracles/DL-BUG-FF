@@ -3,7 +3,6 @@ import bug_finder_patterns
 import bug_fixer
 import os
 
-
 def load_source_code(filename):
     with open(filename, "r") as source:
         tree_ting = ast.parse(source.read())
