@@ -1,8 +1,8 @@
 import ast
-from ff_util import get_func_calls
+from ff_util import get_func_calls, get_assign_nodes_using_func
 
 
-def pattern_bug_finder_example(tree):
+def pattern_a_bug_finder_example(tree):
     """
     this is the bug finder function specific for the pattern that we want to find, you need to implement one function
     like this for each pattern
@@ -39,7 +39,7 @@ def pattern_bug_finder_example(tree):
     return None
 
 
-def pattern_decode_png_no_resize_bug(tree):
+def pattern_b_decode_png_no_resize_bug(tree):
     """
     This pattern deals with the common bug where tf.image.decode_jpeg() or tf.io.decode_jpeg()
     are used to decode files of type .png. This will not throw an error but will potentially cause
@@ -57,7 +57,7 @@ def pattern_decode_png_no_resize_bug(tree):
     return decode_jpeg_list
 
 
-def pattern_decode_png_with_resize_bug(tree):
+def pattern_c_decode_png_with_resize_bug(tree):
     """
     There is one problem where decode_image() cannot be used in conjunction
     with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
@@ -75,7 +75,7 @@ def pattern_decode_png_with_resize_bug(tree):
     return decode_jpeg_with_resize_list
 
 
-def pattern_merge_summary_bug(tree):
+def pattern_d_merge_summary_bug(tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -91,7 +91,7 @@ def pattern_merge_summary_bug(tree):
     return merge_summary_list
 
 
-def pattern_merge_all_summaries_bug(tree):
+def pattern_e_merge_all_summaries_bug(tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -107,7 +107,7 @@ def pattern_merge_all_summaries_bug(tree):
     return merge_all_summaries_list
 
 
-def pattern_summary_writer_bug(tree):
+def pattern_f_summary_writer_bug(tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -123,7 +123,7 @@ def pattern_summary_writer_bug(tree):
     return summary_writer_list
 
 
-def pattern_last_dense_binary_bug(tree):
+def pattern_g_last_dense_binary_bug(tree):
     """
     Checks that the final layer of Dense() is 2 if the class mode is set to binary. A common bug can be making this 3
     which wont work with binary.
@@ -147,7 +147,7 @@ def pattern_last_dense_binary_bug(tree):
     return dense_bug_list
 
 
-def pattern_softmax_with_cross_entropy_bug(tree):
+def pattern_h_softmax_with_cross_entropy_bug(tree):
     """
     Checks for instances where tf.nn.softmax() is used in conjunction with cross_entropy(). In this case it is better
     to use the combined method tf.nn.softmax_cross_entropy_with_logits() as it covers numerically unstable corner cases
@@ -156,14 +156,30 @@ def pattern_softmax_with_cross_entropy_bug(tree):
     sm = tf.nn.softmax(x)         ------>         sm_ce = tf.nn.softmax_cross_entropy_with_logits()
     ce = tf.reduce_sum(sm)
     """
+    class CrossEntropyObject:
+        def __init__(self, logits, softmax_var, entropy_node):
+            self.logits = logits
+            self.softmax_var = softmax_var
+            self.cross_entropy_node = entropy_node
 
     softmax_with_entropy_list = []
-    softmax_func_calls, softmax_arguments = get_func_calls('softmax', tree)
-    cross_entropy_func_calls, cross_entropy_arguments = get_func_calls('reduce_sum', tree)
+    softmax_assign_calls = get_assign_nodes_using_func('softmax', tree)
+    cross_entropy_assign_calls = get_assign_nodes_using_func('reduce_sum', tree)
 
-    if len(softmax_func_calls) == 0 or len(cross_entropy_func_calls) == 0:
+    if len(softmax_assign_calls) == 0 or len(cross_entropy_assign_calls) == 0:
         return softmax_with_entropy_list
 
+    for softmax_node in softmax_assign_calls:
+        for cross_entropy_node in cross_entropy_assign_calls:
+            if isinstance(cross_entropy_node.value.operand.args[0].left, ast.Call):
+                if cross_entropy_node.value.operand.args[0].left.args[0].id == softmax_node.targets[0].id:
+                    bug_location = CrossEntropyObject(softmax_node.value.args[0].id, softmax_node, cross_entropy_node)
+                    softmax_with_entropy_list.append(bug_location)
+            if isinstance(cross_entropy_node.value.operand.args[0].right, ast.Call):
+                if cross_entropy_node.value.operand.args[0].right.args[0].id == softmax_node.targets[0].id:
+                    bug_location = CrossEntropyObject(softmax_node.value.args[0].id, softmax_node, cross_entropy_node)
+                    softmax_with_entropy_list.append(bug_location)
 
     return softmax_with_entropy_list
+
 

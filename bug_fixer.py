@@ -2,7 +2,7 @@ import ast
 from ff_util import get_assign_calls
 
 
-def pattern_bug_fixer_example(buggy_node, tree):
+def pattern_a_bug_fixer_example(buggy_node, tree):
     """
     This is the fix of the bug, we just replace the "units" to 128
 
@@ -13,7 +13,7 @@ def pattern_bug_fixer_example(buggy_node, tree):
             node.args[0].value = 128
 
 
-def pattern_decode_png_no_resize_bug(buggy_node, tree):
+def pattern_b_decode_png_no_resize_bug(buggy_node, tree):
     """
     This pattern deals with the common bug where tf.image.decode_jpeg() or tf.io.decode_jpeg()
     are used to decode files of type .png. This will not throw an error but will potentially cause
@@ -35,7 +35,7 @@ def pattern_decode_png_no_resize_bug(buggy_node, tree):
     return tree
 
 
-def pattern_decode_png_with_resize_bug(buggy_node, tree):
+def pattern_c_decode_png_with_resize_bug(buggy_node, tree):
     """
     There is one problem where decode_image() cannot be used in conjunction
     with tf.image.resize() or tf.image.resize_images(), therefore if either of those calls are also
@@ -65,7 +65,7 @@ def pattern_decode_png_with_resize_bug(buggy_node, tree):
     return tree
 
 
-def pattern_merge_summary_bug(buggy_node, tree):
+def pattern_d_merge_summary_bug(buggy_node, tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -83,7 +83,7 @@ def pattern_merge_summary_bug(buggy_node, tree):
     return tree
 
 
-def pattern_merge_all_summaries_bug(buggy_node, tree):
+def pattern_e_merge_all_summaries_bug(buggy_node, tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -101,7 +101,7 @@ def pattern_merge_all_summaries_bug(buggy_node, tree):
     return tree
 
 
-def pattern_summary_writer_bug(buggy_node, tree):
+def pattern_f_summary_writer_bug(buggy_node, tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -118,7 +118,7 @@ def pattern_summary_writer_bug(buggy_node, tree):
     return tree
 
 
-def pattern_last_dense_binary_bug(buggy_node, tree):
+def pattern_g_last_dense_binary_bug(buggy_node, tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
