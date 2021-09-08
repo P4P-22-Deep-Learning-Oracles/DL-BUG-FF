@@ -59,6 +59,23 @@ def get_func_calls(target, tree):
     return func_calls, arguments
 
 
+def get_assign_calls(target, tree):
+    """
+    This function looks for instances of assignment for certain variables by using their id
+
+    returns a list of all assignments for this variable
+    """
+    target_assign_nodes = []
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if target.id == target:
+                    target_assign_nodes.append(node)
+
+    return target_assign_nodes
+
+
 def load_source_code(filename):
     with open(filename, "r") as source:
         tree_ting = ast.parse(source.read())
@@ -79,7 +96,6 @@ def file_iterator(file):
             print(ast.unparse(tree))
             bug_list = bug_finder(tree)
             bug_fixer_func(tree, bug_list)
-
 
 
 def bug_finder(tree):
