@@ -12,3 +12,4 @@ def my_func(step):
 for step in range(100):
     my_func(step)
     writer.flush()
+    a = 2 + 2

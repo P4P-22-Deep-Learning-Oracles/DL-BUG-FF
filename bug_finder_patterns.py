@@ -166,6 +166,7 @@ def pattern_h_softmax_with_cross_entropy_bug(tree):
     softmax_assign_calls = get_assign_nodes_using_func('softmax', tree)
     cross_entropy_assign_calls = get_assign_nodes_using_func('reduce_sum', tree)
 
+    # Check that there are instances of both subparts of the pattern
     if len(softmax_assign_calls) == 0 or len(cross_entropy_assign_calls) == 0:
         return softmax_with_entropy_list
 
@@ -185,7 +186,7 @@ def pattern_h_softmax_with_cross_entropy_bug(tree):
 
 def pattern_i_tffunction_with_for_loop(tree):
     """
-    Check for instances where @tffunction is used and the function is called in a for loop. In this case that the
+    Check for instances where @tf.function is used and the function is called in a for loop. In this case that the
     parameter needs to be of Tensor type. This can be achieved by either using tf.range and tf.cast together, or
     by using tf.convert_to_tensor(). In this case we will use tf.range and tf.cast as that provides faster iterations.
 
@@ -193,5 +194,33 @@ def pattern_i_tffunction_with_for_loop(tree):
     my_func(step)                                           step = tf.cast(step, tf.int64)
                                                             my_func(step)
     """
+    tffunction_pattern_list = []
+    tffunction_function_names = []
+
+    # Search for all function definitions that have the decorator @tf.function
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            for decorator in node.decorator_list:
+                if decorator.attr == 'function' and decorator.value.id == 'tf':
+                    tffunction_function_names.append(node.name)
+
+    if len(tffunction_function_names) == 0:
+        return tffunction_pattern_list
+
+    for func_name in tffunction_function_names:
+        for node in ast.walk(tree):
+            if isinstance(node, ast.For):
+                if isinstance(node.iter, ast.Call) and node.iter.func.id == 'range':
+                    for node_body in node.body:
+                        if isinstance(node_body, ast.Expr):
+                            if isinstance(node_body.value.func, ast.Name):
+                                if node_body.value.func.id == func_name:
+                                    for args in node_body.value.args:
+                                        if isinstance(args, ast.Name) and args.id == func_name:
+                                            tffunction_pattern_list.append(node)
+
+    return tffunction_pattern_list
+
+
 
 
