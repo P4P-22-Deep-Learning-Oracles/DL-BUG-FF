@@ -1,4 +1,5 @@
 import ast
+from ast import Call
 from ff_util import get_assign_calls
 
 
@@ -130,5 +131,26 @@ def pattern_g_last_dense_binary_bug(buggy_node, tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.args[0].value = 2
+
+    return tree
+
+
+def pattern_h_softmax_with_cross_entropy_bug(crossEntityObject, tree):
+    """
+    Checks for instances where tf.nn.softmax() is used in conjunction with cross_entropy(). In this case it is better
+    to use the combined method tf.nn.softmax_cross_entropy_with_logits() as it covers numerically unstable corner cases
+    in the mathematically right way.
+
+    sm = tf.nn.softmax(x)         ------>         sm_ce = tf.nn.softmax_cross_entropy_with_logits()
+    ce = tf.reduce_sum(sm)
+    """
+    # Note does not look into softmax name = and assumes name = None
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Assign) and ast.dump(node) == ast.dump(crossEntityObject.cross_entropy_node):
+            newNodeValue = ast.Call(ast.Name('tf.nn.softmax_cross_entropy_with_Logits', ast.Load()), [crossEntityObject.logits, crossEntityObject.nameLabel_var],[])
+            ast.copy_location(newNodeValue, node.value)
+            node.value = newNodeValue
+            print("I am here")
 
     return tree
