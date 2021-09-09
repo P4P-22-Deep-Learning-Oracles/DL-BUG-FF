@@ -157,9 +157,9 @@ def pattern_h_softmax_with_cross_entropy_bug(tree):
     ce = tf.reduce_sum(sm)
     """
     class CrossEntropyObject:
-        def __init__(self, logits, softmax_var, entropy_node):
+        def __init__(self, logits, nameLabel_var, entropy_node):
             self.logits = logits
-            self.softmax_var = softmax_var
+            self.nameLabel_var = nameLabel_var
             self.cross_entropy_node = entropy_node
 
     softmax_with_entropy_list = []
@@ -173,11 +173,11 @@ def pattern_h_softmax_with_cross_entropy_bug(tree):
         for cross_entropy_node in cross_entropy_assign_calls:
             if isinstance(cross_entropy_node.value.operand.args[0].left, ast.Call):
                 if cross_entropy_node.value.operand.args[0].left.args[0].id == softmax_node.targets[0].id:
-                    bug_location = CrossEntropyObject(softmax_node.value.args[0].id, softmax_node, cross_entropy_node)
+                    bug_location = CrossEntropyObject(softmax_node.value.args[0], cross_entropy_node.value.operand.args[0].right, cross_entropy_node)
                     softmax_with_entropy_list.append(bug_location)
             if isinstance(cross_entropy_node.value.operand.args[0].right, ast.Call):
                 if cross_entropy_node.value.operand.args[0].right.args[0].id == softmax_node.targets[0].id:
-                    bug_location = CrossEntropyObject(softmax_node.value.args[0].id, softmax_node, cross_entropy_node)
+                    bug_location = CrossEntropyObject(softmax_node.value.args[0], cross_entropy_node.value.operand.args[0].left, cross_entropy_node)
                     softmax_with_entropy_list.append(bug_location)
 
     return softmax_with_entropy_list
