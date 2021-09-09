@@ -183,3 +183,15 @@ def pattern_h_softmax_with_cross_entropy_bug(tree):
     return softmax_with_entropy_list
 
 
+def pattern_i_tffunction_with_for_loop(tree):
+    """
+    Check for instances where @tffunction is used and the function is called in a for loop. In this case that the
+    parameter needs to be of Tensor type. This can be achieved by either using tf.range and tf.cast together, or
+    by using tf.convert_to_tensor(). In this case we will use tf.range and tf.cast as that provides faster iterations.
+
+    for step in range(100):         ------->            for step in tf.range(100):
+    my_func(step)                                           step = tf.cast(step, tf.int64)
+                                                            my_func(step)
+    """
+
+
