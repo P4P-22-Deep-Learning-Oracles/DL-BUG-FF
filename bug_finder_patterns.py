@@ -216,7 +216,7 @@ def pattern_i_tffunction_with_for_loop(tree):
                             if isinstance(node_body.value.func, ast.Name):
                                 if node_body.value.func.id == func_name:
                                     for args in node_body.value.args:
-                                        if isinstance(args, ast.Name) and args.id == func_name:
+                                        if isinstance(args, ast.Name) and args.id == node.target.id:
                                             tffunction_pattern_list.append(node)
 
     return tffunction_pattern_list
