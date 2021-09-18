@@ -1,4 +1,5 @@
 import ast
+import astor
 import bug_finder_patterns
 import bug_fixer
 import os
@@ -20,7 +21,7 @@ def file_iterator(file):
             print("==============================")
             print("ORIGINAL CODE")
             print("==============================")
-            print(ast.unparse(tree))
+            print(astor.to_source(tree))
             bug_list = bug_finder(tree)
             bug_fixer_func(tree, bug_list)
 
@@ -50,6 +51,7 @@ def bug_fixer_func(tree, bugList):
         print("==============================")
         print("DL-BUG_FIXER")
         print("==============================")
+        fixList = []
         patternCount = 0
         for i in dir(bug_fixer):
             # Get the attributes
@@ -67,7 +69,7 @@ def bug_fixer_func(tree, bugList):
                 patternCount += 1
         print()
         print("the fixed version of the program is")
-        print(ast.unparse(tree))
+        print(astor.to_source(tree))
     else:
         print("No known bugs found")
 
