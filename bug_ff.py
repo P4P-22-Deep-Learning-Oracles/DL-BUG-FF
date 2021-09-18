@@ -7,6 +7,13 @@ import shutil
 import astor
 
 filename = ""
+def run_once(f):
+    def wrapper(*args, **kwargs):
+        if not wrapper.has_run:
+            wrapper.has_run = True
+            return f(*args, **kwargs)
+    wrapper.has_run = False
+    return wrapper
 
 def load_source_code(filename):
     with open(filename, "r") as source:
@@ -16,7 +23,6 @@ def load_source_code(filename):
 
 
 def file_iterator(file):
-    bugCount = 0
     for pythonFile in os.listdir(file):
         if os.path.isdir(file + "/" + pythonFile):
             file_iterator(file + "/" + pythonFile)
@@ -28,11 +34,10 @@ def file_iterator(file):
             print("==============================")
             print(astor.to_source(tree))
             bug_list = bug_finder(tree)
-            bug_fixer_func(tree, bug_list)
-            if bug_list is not None and bugCount == 0:
+            tree = bug_fixer_func(tree, bug_list)
+            if bug_list is not None:
                 print("Bugs found. Creating a copy of your directory...")
                 directory_copy()
-                bugCount += 1
             fullPath = file + "/" + pythonFile
             fileCopy = fullPath.replace(filename, filename + "Copy", 1)
             implement_fix(tree, fileCopy)
@@ -63,6 +68,7 @@ def bug_finder(tree):
     return bugList
 
 
+@run_once
 def directory_copy():
     if os.path.exists(filename + "Copy"):
         shutil.rmtree(filename + "Copy")
@@ -94,6 +100,7 @@ def bug_fixer_func(tree, bugList):
         print()
         print("the fixed version of the program is")
         print(astor.to_source(tree))
+        return tree
     else:
         print("No known bugs found")
 
