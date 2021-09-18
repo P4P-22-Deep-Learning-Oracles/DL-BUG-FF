@@ -2,6 +2,11 @@ import ast
 from ast import Call
 from ff_util import get_assign_calls
 
+'''
+Changes:
+Return list of lines to be altered and the string that needs to be replaced (or inserted)
+[12, "time = tf.getTime(tensor)", INSERT]
+'''
 
 def pattern_a_bug_fixer_example(buggy_node, tree):
     """
@@ -150,5 +155,38 @@ def pattern_h_softmax_with_cross_entropy_bug(crossEntityObject, tree):
             ast.copy_location(newNodeValue, node.value)
             node.value = newNodeValue
             print("I am here")
+
+    return tree
+
+
+def pattern_i_tffunction_with_for_loop(buggy_node, tree):
+    """
+    Check for instances where @tf.function is used and the function is called in a for loop. In this case that the
+    parameter needs to be of Tensor type. This can be achieved by either using tf.range and tf.cast together, or
+    by using tf.convert_to_tensor(). In this case we will use tf.range and tf.cast as that provides faster iterations.
+
+    for step in range(100):         ------->            for step in tf.range(100):
+    my_func(step)                                           step = tf.cast(step, tf.int64)
+                                                            my_func(step)
+    """
+
+    # we need to record where the for statement is located to insert the step function afterwards
+
+    flag = False
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.For) and ast.dump(buggy_node) == ast.dump(node):
+            stepVariableId = buggy_node.body[0].value.args[0].id
+            node.iter.func.id = "tf.range"
+
+
+            nameNode = ast.Name(stepVariableId, ast.Store())
+            # callNode = ast.Call(ast.Name('tf.cast', ast.Load()), [ast.Num(0)], [])
+            arg1 = ast.Name(stepVariableId, ast.Load())
+            arg2 = ast.Name('tf.int64', ast.Load())
+            callNode = ast.Call(ast.Name('tf.cast', ast.Load()), [arg1, arg2], [])
+            assignNode = ast.Assign([nameNode], callNode)
+            exprNode = ast.Expr(assignNode)
+            node.body.insert(0, exprNode)
 
     return tree
