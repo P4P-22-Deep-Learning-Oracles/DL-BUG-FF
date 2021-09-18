@@ -84,7 +84,7 @@ def get_assign_nodes_using_func(target, tree):
     assign_node_list = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Assign):
-            if isinstance(node.value, ast.Call):
+            if isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute):
                 if node.value.func.attr == target:
                     assign_node_list.append(node)
             if isinstance(node.value, ast.UnaryOp):
