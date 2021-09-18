@@ -33,7 +33,9 @@ def file_iterator(file):
                 print("Bugs found. Creating a copy of your directory...")
                 directory_copy()
                 bugCount += 1
-            implement_fix(tree, file + "Copy" + "/" + pythonFile)
+            fullPath = file + "/" + pythonFile
+            fileCopy = fullPath.replace(filename, filename + "Copy", 1)
+            implement_fix(tree, fileCopy)
 
 
 def implement_fix(tree, pythonFile):
