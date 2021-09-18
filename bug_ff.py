@@ -14,6 +14,7 @@ def load_source_code(filename):
 
 
 def file_iterator(file):
+    bugCount = 0
     for filename in os.listdir(file):
         if os.path.isdir(file + "/" + filename):
             file_iterator(file + "/" + filename)
@@ -26,10 +27,10 @@ def file_iterator(file):
             print(ast.unparse(tree))
             bug_list = bug_finder(tree)
             bug_fixer_func(tree, bug_list)
-
-    print("Bugs found. Creating a copy of your directory...")
-    if bug_list is not None:
-        directory_copy()
+            if bug_list is not None and bugCount == 0:
+                print("Bugs found. Creating a copy of your directory...")
+                directory_copy()
+                bugCount += 1
 
 
 def bug_finder(tree):
@@ -49,6 +50,7 @@ def bug_finder(tree):
             bugList.append(patternBugs)
 
     return bugList
+
 
 def directory_copy():
     if os.path.exists(filename + "Copy"):
