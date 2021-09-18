@@ -3,6 +3,10 @@ import astor
 import bug_finder_patterns
 import bug_fixer
 import os
+import shutil
+import astor
+
+filename = ""
 
 def load_source_code(filename):
     with open(filename, "r") as source:
@@ -12,18 +16,30 @@ def load_source_code(filename):
 
 
 def file_iterator(file):
-    for filename in os.listdir(file):
-        if os.path.isdir(file + "/" + filename):
-            file_iterator(file + "/" + filename)
+    bugCount = 0
+    for pythonFile in os.listdir(file):
+        if os.path.isdir(file + "/" + pythonFile):
+            file_iterator(file + "/" + pythonFile)
             continue
-        if filename.endswith(".py"):
-            tree = load_source_code(file + "/" + filename)
+        if pythonFile.endswith(".py"):
+            tree = load_source_code(file + "/" + pythonFile)
             print("==============================")
             print("ORIGINAL CODE")
             print("==============================")
             print(astor.to_source(tree))
             bug_list = bug_finder(tree)
             bug_fixer_func(tree, bug_list)
+            if bug_list is not None and bugCount == 0:
+                print("Bugs found. Creating a copy of your directory...")
+                directory_copy()
+                bugCount += 1
+            implement_fix(tree, file + "Copy" + "/" + pythonFile)
+
+
+def implement_fix(tree, pythonFile):
+    with open(pythonFile, "w") as myfile:
+        myfile.write(astor.to_source(tree))
+
 
 
 def bug_finder(tree):
@@ -43,6 +59,12 @@ def bug_finder(tree):
             bugList.append(patternBugs)
 
     return bugList
+
+
+def directory_copy():
+    if os.path.exists(filename + "Copy"):
+        shutil.rmtree(filename + "Copy")
+    shutil.copytree(filename, filename + "Copy")
 
 
 def bug_fixer_func(tree, bugList):
