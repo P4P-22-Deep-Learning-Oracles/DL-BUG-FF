@@ -2,6 +2,9 @@ import ast
 import bug_finder_patterns
 import bug_fixer
 import os
+import shutil
+
+filename = ""
 
 def load_source_code(filename):
     with open(filename, "r") as source:
@@ -24,6 +27,10 @@ def file_iterator(file):
             bug_list = bug_finder(tree)
             bug_fixer_func(tree, bug_list)
 
+    print("Bugs found. Creating a copy of your directory...")
+    if bug_list is not None:
+        directory_copy()
+
 
 def bug_finder(tree):
     print("==============================")
@@ -42,6 +49,11 @@ def bug_finder(tree):
             bugList.append(patternBugs)
 
     return bugList
+
+def directory_copy():
+    if os.path.exists(filename + "Copy"):
+        os.rmtree(filename + "Copy")
+    shutil.copytree(filename, filename + "Copy")
 
 
 def bug_fixer_func(tree, bugList):
