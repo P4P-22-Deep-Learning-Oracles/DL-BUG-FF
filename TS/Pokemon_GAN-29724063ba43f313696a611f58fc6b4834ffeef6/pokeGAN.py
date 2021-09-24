@@ -10,6 +10,8 @@ import cv2
 import random
 import scipy.misc
 from utils import *
+import time
+
 
 slim = tf.contrib.slim
 
@@ -208,20 +210,20 @@ def train():
     print('total training sample num:%d' % samples_num)
     print('batch size: %d, batch num per epoch: %d, epoch num: %d' % (batch_size, batch_num, EPOCH))
     print('start training...')
+    t0 = time.time()
     for i in range(EPOCH):
-        print("Running epoch {}/{}...".format(i, EPOCH))
         for j in range(batch_num):
-            print(j)
+            #print(j)
             d_iters = 5
             g_iters = 1
 
             train_noise = np.random.uniform(-1.0, 1.0, size=[batch_size, random_dim]).astype(np.float32)
             for k in range(d_iters):
-                print(k)
+                #print(k)
                 train_image = sess.run(image_batch)
                 #wgan clip weights
                 sess.run(d_clip)
-                
+
                 # Update the discriminator
                 _, dLoss = sess.run([trainer_d, d_loss],
                                     feed_dict={random_input: train_noise, real_image: train_image, is_train: True})
@@ -232,13 +234,24 @@ def train():
                 _, gLoss = sess.run([trainer_g, g_loss],
                                     feed_dict={random_input: train_noise, is_train: True})
 
-            # print 'train:[%d/%d],d_loss:%f,g_loss:%f' % (i, j, dLoss, gLoss)
-            
+
         # save check point every 500 epoch
         if i%500 == 0:
             if not os.path.exists('./model/' + version):
                 os.makedirs('./model/' + version)
-            saver.save(sess, './model/' +version + '/' + str(i))  
+
+            saver.save(sess, './model/' +version + '/' + str(i))
+            st1 = "Running epoch {}/{}...".format(i, EPOCH)
+            st2 = "train:[{}],d_loss:{},g_loss:{}".format(i, dLoss, gLoss)
+            t1 = time.time() - t0
+            with open('testLog.txt', 'a') as f:
+                f.write(st1)
+                f.write('\n')
+                f.write(st2)
+                f.write('\n')
+                f.write(str(t1))
+                f.write('\n')
+            print(t1)
         if i%50 == 0:
             # save images
             if not os.path.exists(newPoke_path):
@@ -248,7 +261,7 @@ def train():
             # imgtest = imgtest * 255.0
             # imgtest.astype(np.uint8)
             save_images(imgtest, [8,8] ,newPoke_path + '/epoch' + str(i) + '.jpg')
-            
+
             print('train:[%d],d_loss:%f,g_loss:%f' % (i, dLoss, gLoss))
     coord.request_stop()
     coord.join(threads)
