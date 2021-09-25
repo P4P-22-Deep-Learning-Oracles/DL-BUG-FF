@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Controllers</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" />
+    <script src="angular.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        .service("ZipCodes", function($rootScope) {
+            return {
+                setZipCode: function(type, zip) {
+                    this[type] = zip;
+                    $rootScope.$broadcast("zipCodeUpdated", {
+                        type: type,
+                        zipCode: zip
+                    });
+                }
+            }
+        })
+        .controller("simpleCtrl", function ($scope, ZipCodes) {
+            $scope.cities = ["London", "New York", "Paris"];
+            $scope.city = "London";
+
+            $scope.getCountry = function (city) {
+                switch (city) {
+                    case "London":
+                       return "UK";
+                    case "New York":
+                       return "USA";
+                }
+            }  
+
+            $scope.address = {};
+
+            $scope.setAddress = function  (type, zip) {
+                console.log("Type: " + type + " " + zip);
+
+                //$scopeScope.$broadcast("zipCodeUpdated", {type: type, zipCode: zip});
+                $scope.address[type] = zip;
+                ZipCodes.setZipCode(type, zip);
+            }
+
+            $scope.copyAddress = function () {
+                $scope.zip = $scope.billingZip;
+                $scope.shippingZip = $scope.billingZip;
+            }
+
+            $scope.$on("zipCodeUpdated", function(event, args) {
+                $scope[args.type] = args.zipCode;
+            });
+
+
+
+        });
+    </script>
+    <script src="controllers13.js"></script>
+</head>
+<body>
+    <div class="well" ng-controller="simpleCtrl">
+        <p>The city is : {{city}}</p>
+        <p>The country is : {{getCountry(city) || "Unknown"}}</p>
+    </div>
+
+    <div class="well" ng-controller="simpleCtrl">
+        <div class="panle">
+            <label>Select a city:</label>
+            <select ng-options="city for city in cities" ng-model="city"></select>
+        </div>
+        <div class="panle">
+            <p>The city is : {{city}}</p>
+            <p>The country is: {{getCountry(city) || "Unkown"}}</p>
+        </div>
+
+    </div>
+
+    <div class="well" ng-controller="simpleCtrl">
+        <h3>共用作用域</h3>
+        <div class="well">
+            <h4>Billing Zip Code:</h4>
+            <div class="form-group">
+                <input class="form-control" ng-model="billingZip" />
+            </div>
+            <button class="btn btn-primary" ng-click="setAddress('billingZip', billingZip)">Save Billing</button>
+        </div>
+
+        <div class="well">
+            <h4>Shipping Zip Code:</h4>
+            <div class="form-group">
+                <input class="form-control" ng-model="shippingZip"/>
+            </div>
+            <button class="btn btn-primary" ng-click="copyAddress()">
+                Use Billing
+            </button>
+            <button class="btn btn-primary" ng-click="setAddress('shippingZip', shippingZip)">
+                Save Shipping
+            </button>
+        </div>
+    </div>
+
+    <div class="well">
+        <h3>非共用作用域</h3>
+        <div class="well" ng-controller="simpleCtrl">
+            <h4>Billing Zip Code:</h4>
+            <div class="form-group">
+                <input class="form-control" ng-model="billingZip" />
+            </div>
+            <button class="btn btn-primary" ng-click="setAddress('billingZip', billingZip)">Save Billing</button>
+        </div>
+
+        <div class="well" ng-controller="simpleCtrl">
+            <h4>Shipping Zip Code:</h4>
+            <div class="form-group">
+                <input class="form-control" ng-model="shippingZip"/>
+            </div>
+            <button class="btn btn-primary" ng-click="copyAddress()">
+                Use Billing
+            </button>
+            <button class="btn btn-primary" ng-click="setAddress('shippingZip', shippingZip)">
+                Save Shipping
+            </button>
+        </div>
+    </div>
+
+    <div class="well" ng-controller="topLevelCtrl"> 
+        <div class="well">
+            <h4>Top Level Controller</h4>
+            <div class="input-group-btn">
+                <span class="input-group-btn"> 
+                    <button class="btn btn-default" type="button" ng-click="reverseText()">Reverse</button>
+                    <button class="btn btn-default" type="button" ng-click="changeCase()">Case</button>
+                </span>
+                <input class="form-control" ng-model="dataValue" />
+            </div>
+        </div>
+
+        <div class="well" ng-controller="firstChildCtrl">
+            <h4>First Child Controller</h4>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="reverseText()">Reverse</button>
+                    <button class="btn btn-default" type="button" ng-click="changeCase()">Case</button>
+                </span>
+            </div>
+            <input class="form-control" ng-model="dataValue" />
+        </div>
+
+        <div class="well" ng-controller="secondChildCtrl">
+            <h4>Second Child Controller</h4>
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" ng-click="reverseText()">Reverse</button>
+                    <button class="btn btn-default" type="button" ng-click="changeCase()">Case</button>
+                    <button class="btn btn-default" type="button" ng-click="shiftFour()">Shift</button>
+                </span>
+                <input class="form-control" ng-model="dataValue" />
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script src="../ngmodules/angular-resource.js"></script>
+    <script src="../ngmodules/angular-route.js"></script>
+    <script src="../ngmodules/angular-animate.min.js"></script>
+    <script src="../ngmodules/angular-touch.min.js"></script>
+    <script type="text/javascript" src="products.js"></script>
+    <script type="text/javascript" src="increment.js"></script>
+    <style type="text/css">
+        .ngFade.ng-enter {transition: 0.1s linear all; opacity: 0;}
+        .ngFade.ng-enter-active {opacity: 1;}
+        .ngFade.ng-leave {transition: 0.1s linear all; opacity: 1;}
+    </style>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="panel panel-primary">
+        <h3 class="panel panel-heading">Products</h3>
+<!--         <ng-include src="'tableView.html'" ng-show="displayMode == 'list'"></ng-include>
+        <ng-include src="'editorView.html'" ng-show="displayMode == 'edit'"></ng-include>  -->
+        <div ng-view class="ngFade"></div>
+    </div>
+</body>
+</html>

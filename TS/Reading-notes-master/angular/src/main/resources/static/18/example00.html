@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Service and Modules</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script type="text/javascript">
+
+        angular.module("customServices", [])
+        .provider("logService", function(){
+            var counter = true;
+            var debug = true;
+
+            return {
+                messageCounterEnabled: function (setting) {
+                    if (angular.isDefined(setting)) {
+                        counter = setting;
+                        return this;
+                    } else {
+                        return counter;
+                    }
+                },
+                debugEnabled: function (setting) {
+                    if (angular.isDefined(setting)) {
+                        debug = setting;
+                        return this;
+                    } else {
+                        return debug;
+                    }
+                },
+                $get: function() {
+                    return {
+                        messageCount: 0,
+                        log: function(msg) {
+                            if (debug) {
+                                // console.log("(LOG + " + this.messageCount++ + ") " + msg);
+                                console.log("(LOG" + (counter ? (" + " + this.messageCount++ + ") "): ")" + msg));
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+    <script type="text/javascript">
+        angular.module("customDirectives", ["customServices"])
+        .directive("triButton", function(logService){
+            return {
+                scope: {counter: "=counter"},
+                link: function(scope, element, attrs) {
+                    element.on("click", function(event){
+                        // console.log("Button click: " + event.target.innerText);
+                        logService.log("triButton: Total click count:" + event.target.innerText);
+                        scope.$apply(function(){
+                            scope.counter++;
+                        });
+                    });
+                }
+            };
+        })
+    </script>
+    <script type="text/javascript">
+        angular.module("exampleApp", ["customDirectives", "customServices"])
+        .config(function (logServiceProvider){
+            logServiceProvider.debugEnabled(true).messageCounterEnabled(false);
+        })
+        .controller("defaultCtrl", function ($scope, logService) {
+            $scope.data = {
+                cities : ["London", "New York", "Paris"],
+                totalClicks : 0
+            };
+
+            $scope.$watch('data.totalClicks', function (newVal) {
+                // console.log("Total click count:" + newVal);
+                logService.log("Total click count:" + newVal);
+            })
+        });
+
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="well">
+        <div class="btn-group" tri-button counter="data.totalClicks" source="data.cities">
+            <button class="btn btn-default" ng-repeat="city in data.cities">
+                {{city}}
+            </button>
+        </div>
+        <h5>Total Click: {{data.totalClicks}}</h5>
+    </div>
+</body>
+</html>

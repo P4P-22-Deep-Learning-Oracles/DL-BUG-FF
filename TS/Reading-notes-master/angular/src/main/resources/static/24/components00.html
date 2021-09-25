@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Components</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        .controller("defaultCtrl", function($scope, $injector){
+            var counter = 0;
+
+            var logClick = function ($log, $exceptionHandler, message) {
+                if (counter == 0) {
+                    $log.log(message);
+                    counter++;
+                } else {
+                    $exceptionHandler("Already clicked");
+                }
+            } 
+
+            $scope.handleClick = function () {
+                var deps = $injector.annotate(logClick);
+                var args = [];
+                for (var i = 0; i < deps.length; ++i) {
+                    console.log("Dependency: " + deps[i]);
+
+                    if ($injector.has[deps[i]]){
+                        console.log("Dependency has: " + deps[i]);
+                        args.push($injector.get(deps[i]));
+                    } else if (deps[i] == "message") {
+                        args.push("button clicked");
+                    }
+                }
+                logClick.apply(null, args);
+            }
+        });
+    </script>
+</head>
+<body ng-controll="defaultCtrl">
+    <div class="well">
+        <button class="btn btn-primary" ng-click="handleClick()">Click Me!</button>
+    </div>
+</body>
+</html>

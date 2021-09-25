@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Products</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script src="../ngmodules/angular-resource.js"></script>
+    <script src="../ngmodules/angular-route.js"></script>
+    <script src="../ngmodules/angular-animate.min.js"></script>
+    <script src="../ngmodules/angular-touch.min.js"></script>
+    <script type="text/javascript" src="products.js"></script>
+    <script type="text/javascript" src="increment.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", ["ngTouch"])
+        .controller("defaultCtrl", function ($scope, $element) {
+            $scope.swipeType = "<None>";
+            $scope.handleSwipe = function (direction) {
+                $scope.swipeType = direction;
+            }
+        })
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="well" ng-swipe-right="handleSwipe('left-to-right')"
+            ng-swipe-left="handleSwipe('right-to-left')">
+            <h4>Swipe Here</h4>  
+            </div>     
+        </div>
+        <div>Swipe was: {{swipeType}}</div>
+    </div>
+</body>
+</html>

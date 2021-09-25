@@ -1,0 +1,55 @@
+# Server settings
+server:
+    port: 8080
+  
+# DATASOURCE
+spring:
+    http:
+        encoding.charset: UTF-8
+        encoding.enable: true  
+        encoding.force: true
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://47.90.107.224:3306/biyibi?useUnicode=true&characterEncoding=utf-8
+        username: biyibi
+        password: mlxjAIBl9EGUiJ3g
+        initialSize: 5
+        minIdle: 5
+        maxActive: 200
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+#        maxPoolPreparedStatementPerConnectionSize: 20
+#        filters: stat
+    redis:
+        database: 0
+        host: 172.17.0.2
+        password: redistest
+        port: 6379
+        pool:
+            max-idle: 600
+            min-idle: 0
+            max-active: 8
+            max-wait: -1
+
+# MyBatis  
+mybatis:  
+    typeAliasesPackage: com.piaolian.domain.entity
+    mapperLocations: classpath*:mybatis/sqlmap/*Mapper*.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
+
+# LOGGING  
+logging:  
+    level:
+        root: INFO
+        com.piaolink.admin.mapper: DEBUG
+
+jwt:
+    base64Security: base64Security
+    ignore: true

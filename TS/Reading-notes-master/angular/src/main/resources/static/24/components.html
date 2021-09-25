@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Components</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        // .config(function ($provide) {
+        //     // $provide.decorator("$log", function($delegate){
+        //     //     $delegate.originalLog = $delegate.log;
+        //     //     $delegate.log = function(message) {
+        //     //         $delegate.originalLog("Decorated: " + message);
+        //     //     }
+        //     //     return $delegate;
+        //     // });
+        // })
+        .controller("defaultCtrl", function($scope){
+            $scope.handleClick = function() {
+                console.log("xxxxxxxxxxxxx");
+                // $log.log("Button Clicked.")
+            };
+
+            console.log("ttttttttttttt");
+        });
+    </script>
+</head>
+<body ng-controll="defaultCtrl">
+    <div class="well">
+        <button class="btn btn-primary" ng-click="handleClick()">Click Me!</button>
+    </div>
+</body>
+</html>

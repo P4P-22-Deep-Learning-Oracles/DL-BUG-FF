@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Example</title>
+    <script src="angular.js"></script>
+    <script type="text/javascript">
+        console.log("hello");
+
+        function myFunc() {
+            console.log("This is a statement");
+        }
+        myFunc();
+
+        var myGlobleVar = "apples";
+        function myFunc1(name) {
+            var myLocalVar = "sunny";
+            return ("hello " + name + ". Today is" + myLocalVar + "." );
+        }
+
+        console.log(myFunc1("Adam"))
+    </script>
+    <script type="text/javascript">
+        var myData = new Object();
+        myData.name = "Adam";
+        myData.weather = "Sunny";
+
+        console.log("Hello " + myData.name + ". " );
+        console.log("Today is " + myData.weather + ". ");
+
+        var myData1 = {
+            name: "Adam",
+            weather: "Sunny",
+            printMessage: function() {
+                console.log("Hello " + this.name + ". " );
+                console.log("Today is " + this.weather + ". ");
+            }
+        }
+
+        myData1.printMessage();
+
+        var myExtendedObject = {
+            city: "London"
+        }
+
+        angular.extend(myExtendedObject, myData1);
+        console.log('myExtendedObject:' + JSON.stringify(myExtendedObject));
+
+
+        console.log("I like " + myGlobleVar);
+    </script>
+</head>
+<body>
+    This is a simple example;
+</body>
+</html>

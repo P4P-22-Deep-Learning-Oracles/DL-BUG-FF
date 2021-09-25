@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directives</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" />
+    <script src="angular.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        .controller("defaultCtrl", function ($scope) {
+
+            $scope.data={
+                rowColor: "Blue",
+                columnColor: "Green"
+            };
+
+            $scope.handleEvent= function (e) {
+                console.log("Event type: " + e.type);
+                $scope.data.columnColor = e.type == "mouseover" ? "Green" : "Blue";
+            };
+
+
+            $scope.todos = [
+            {action: "Get groceries", complete: false},
+            {action: "Call plumber", complete: false},
+            {action: "Buy running shoes", complete: true},
+            {action: "By Flowers", complete: false},
+            {action: "Call family", complete: false}
+            ];
+
+            $scope.viewFile = function () {
+                return $scope.showList ? "list.html" : "table.html";
+            };
+
+            $scope.reportChange = function() {
+                console.log("Displayed content: " + $scope.viewFile())
+            }
+
+            $scope.buttonNames = ["Red", "Green", "Blue"];
+            $scope.settings = {
+                Rows: "Red",
+                Columns: "Green"
+            };
+
+            $scope.message = "Tap Me!";
+
+            $scope.dataValue = false;
+        })
+        .directive("tap", function(){
+            return function (scope, elem, attrs) {
+                elem.on("touchstart touchend",  function(){
+                    scope.$apply(attrs["tap"]);
+                })
+            }
+        });
+
+    </script>
+    <style type="text/css">
+        .odd {background-color: lightcoral}
+        .even {background-color: lavenderblush}
+    </style>
+    <style type="text/css">
+        td > *:first-child {font-weight: bold}
+    </style>
+    <style type="text/css">
+        tr.Red {background-color: lightcoral;}
+        tr.Green {background-color: lightgreen;}
+        tr.Blue {background-color: lightblue;}
+    </style>
+</head>
+<body>
+    <div id="todoPannel0" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 00</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos">
+                    <td>{{item.action}}</td>
+                    <td>{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="todoPannel1" class="pannel" ng-controller="defaultCtrl">
+        <div class="well">
+            <div>The first item is:{{todos[0].action}}</div>
+        </div>
+
+        <div class="form-group well">
+            <label for="firstItem">Set First Item:</label>
+            <input name="firstItem" class="form-control" ng-model="todos[0].action" />
+        </div>
+    </div>
+
+    <div id="todoPannel2" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 02</h3>
+        <div>There are {{todos.length}} items.</div>
+        <div>
+            There are <span ng-build="todos.length"></span> items.
+        </div>
+        <div ng-build-template="First:{{todos[0].action}}. Second: {{todos[1].action}}"></div>
+        <div ng-build-bindable>
+            AngularJS users {{ and }} characters for templates
+        </div>
+    </div>
+
+    <div id="todoPannel3" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 03</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos">
+                <td ng-repeat="prop in item">{{prop}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+
+    <div id="todoPannel4" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 04</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos">
+                <td ng-repeat="(key, value) in item">{{key}}={{value}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+
+    <div id="todoPannel5" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 05</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" class="ng-scope">
+                <td ng-repeat="(key, value) in item" class="ng-scope ng-building">action=Get groceries</td>
+                <td ng-repeat="(key, value) in item" class="ng-scope ng-building">complete=false</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+
+    <div id="todoPannel6" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 06</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-class="$odd? 'odd':'even'">
+                <td>{{$index+1}}</td>
+                <td ng-repeat="prop in item">{{prop}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+
+    <div id="todoPannel7" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 07</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-class="$odd? 'odd':'even'">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td><span ng-if="$first || $last">{{item.complete}}</span></td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel8" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 08</h3>
+        <table class="table">
+            <tbody>
+                <tr ng-repeat-start="item in todos">
+                    <td>This is item {{$index}}</td>
+                </tr>
+                <tr>
+                    <td>The action is:{{item.action}}</td>
+                </tr>
+                <tr ng-repeat-end>
+                    <td>Item {{$index}} is {{item.complete ? "": "not"}} complete</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel9" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 09</h3>
+        <ng-include src="'table.html'"></ng-include>      
+    </div>
+
+    <div id="todoPannel10" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 10</h3>
+        <div class="well">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="showList" >
+                    User the list view
+                </label>
+            </div>
+        </div>
+        <ng-include src="viewFile()" onload="reportChange()"></ng-include>      
+    </div>
+
+    <div id="todoPannel11" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 11</h3>
+        <div class="well">
+            <div class="radio" ng-repeat="button in ['None', 'Table', 'List']">
+                <label ng-cloak>
+                    <input type="radio" ng-model="data.mode" value="{{button}}" ng-checked="$first" />
+                    {{button}}
+                </label>
+            </div>
+        </div>
+        <div ng-switch on="data.mode" ng-cloak>
+            <div ng-switch-when="Table">
+                <table class="table">
+                    <thead>
+                        <tr><th>#</th><th>Action</th><th>Done</th></tr>
+                    </thead>
+                    <tr ng-repeat="item in todos" ng-class="$odd ? 'odd' : 'even'">
+                        <td>{{$index + 1}}</td>
+                        <td ng-repeat="prop in item">{{prop}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div ng-switch-when="List">
+                <ol>
+                    <li ng-repeat="item in todos">
+                        {{item.action}}
+                        <span ng-if="item.complete">(Done)</span>
+                    </li>
+                </ol>
+            </div>
+            <div ng-switch-default>
+                Select another option to display a layout
+            </div>
+        </div>    
+    </div>
+
+    <div id="todoPannel12" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 12</h3>
+        <div class="checkbox well">
+            <label>
+                <input type="checkbox" ng-model="todos[2].complete" />
+                Item 3 is complete
+            </label>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" >
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td>
+                    <span ng-hide="item.complete">(Incomplete)</span>
+                    <span ng-show="item.complete">(Done)</span>
+                </td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel13" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 13</h3>
+        <div class="checkbox well">
+            <label>
+                <input type="checkbox" ng-model="todos[2].complete" />
+                Item 3 is complete
+            </label>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" >
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td>
+                    <span ng-if="!item.complete">(Incomplete)</span>
+                    <span ng-if="item.complete">(Done)</span>
+                </td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel14" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 14</h3>
+        <div class="checkbox well">
+            <label>
+                <input type="checkbox" ng-model="todos[2].complete" />
+                Item 3 is complete
+            </label>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-hide="item.complete">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td>{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel15" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 15</h3>
+        <div class="checkbox well">
+            <label>
+                <input type="checkbox" ng-model="todos[2].complete" />
+                Item 3 is complete
+            </label>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos | filter:{complete: 'false'}">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td>{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel16" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 16</h3>
+        <div class="row well">
+            <div class="col-xs-6" ng-repeat="(key, val) in settings">
+                <h4>{{key}}</h4>
+                <div class="radio" ng-repeat="button in buttonNames">
+                    <label>
+                    <input type="radio" ng-model="settings[key]" value="{{button}}" />
+                    {{button}}
+                    </label>
+                </div>
+            </div>    
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-class="settings.Rows">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td ng-style="{'background-color': settings.Columns}">{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel17" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 17</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-class-even="settings.Rows" ng-class-odd="settings.Columns">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td>{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+    <div id="todoPannel18" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 18</h3>
+
+        <div class="well">
+            <span ng-repeat="button in buttonNames">
+                <button class="btn btn-info" ng-click="data.rowColor = button">
+                    {{button}}
+                </button>
+            </span>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Action</th>
+                    <th>Done</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="item in todos" ng-class="data.rowColor"
+                ng-mouseenter="handleEvent($event)"
+                ng-mouseleave="handleEvent($event)">
+                <td>{{$index+1}}</td>
+                <td>{{item.action}}</td>
+                <td ng-class="data.columnColor">{{item.complete}}</td>
+                </tr>
+            </tbody>
+        </table>        
+    </div>
+
+    <div id="todoPannel19" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 19</h3>
+
+        <div class="well" tap="message = 'Tapped!'">
+            {{message}}
+        </div>
+       
+    </div>
+
+    <div id="todoPannel20" class="pannel" ng-controller="defaultCtrl">
+        <h3 class="pannel-header">To do list 20</h3>
+        <div class="checkbox well">
+            <label>
+                <input type="checkbox" ng-model="dataValue" />
+                Set the Data Value
+            </label>
+        </div>
+
+        <button class="btn btn-success" ng-disabled="dataValue">My Button</button>
+    </div>
+
+</body>
+</html>

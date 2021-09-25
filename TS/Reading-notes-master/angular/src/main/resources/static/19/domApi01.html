@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>DOM API Services</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        .controller("defaultCtrl", function ($scope, $interval) {
+            $interval(function() {
+                $scope.time = new Date().toTimeString();
+            }, 2000);
+        });
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="panel panel-default">
+        <h4 class="panel-heading">Time</h4>
+        <div class="panel-body">
+            The time is: {{time}}
+        </div>        
+    </div>
+</body>
+</html>

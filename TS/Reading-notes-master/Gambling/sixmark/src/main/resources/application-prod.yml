@@ -1,0 +1,32 @@
+spring:
+    http:
+        encoding.charset: UTF-8
+        encoding.force: true
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://10.0.32.9/weShare?useUnicode=true&characterEncoding=utf-8&useSSL=false
+        username: esginuser
+        password: esginuser.123
+        initialSize: 5
+        minIdle: 5
+        maxActive: 200
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+
+mybatis:
+    typeAliasesPackage: com.weshare.acount.mapper
+    mapperLocations: classpath*:mybatis/sqlmap/*Mapper*.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
+
+logging:
+    file: /data/gamebling/sixmark/log/acount.log
+    level:
+        root: info
+        com.weshare.acount.mapper: info

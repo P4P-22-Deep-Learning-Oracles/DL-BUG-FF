@@ -1,0 +1,32 @@
+# DATASOURCE
+spring:
+    http:
+        encoding.charset: UTF-8
+        encoding.force: true
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.10.18/weShare?useUnicode=true&characterEncoding=utf-8&useSSL=false
+        username: root
+        password: 123456QW@qw
+        initialSize: 5
+        minIdle: 5
+        maxActive: 200
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+
+mybatis:
+    typeAliasesPackage: com.gamebling.sixmark.mapper
+    mapperLocations: classpath*:mybatis/sqlmap/*Mapper*.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
+
+logging:
+    level:
+        root: info
+        com.weshare.acount.mapper: debug
