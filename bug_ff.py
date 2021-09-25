@@ -5,6 +5,7 @@ import bug_fixer
 import os
 import shutil
 import astor
+import time
 
 filename = ""
 def run_once(f):
@@ -33,8 +34,12 @@ def file_iterator(file):
             print("ORIGINAL CODE")
             print("==============================")
             print(astor.to_source(tree))
+            t0 = time.time()
             bug_list = bug_finder(tree)
+            print("time for bug finder is " + str(time.time() - t0))
+            t1 = time.time()
             tree = bug_fixer_func(tree, bug_list)
+            print("time for bug fixer is " + str(time.time() - t1))
             if bug_list is not None:
                 print("Bugs found. Creating a copy of your directory...")
                 directory_copy()
@@ -117,8 +122,9 @@ if __name__ == '__main__':
         print("Oops, sorry that file does not exist or isn't a directory! Try again...")
 
     # Iterate through all .py files in directory and sub-directories
+    t9 = time.time()
     file_iterator(filename)
-
+    print("time for entire program including prints " + str(time.time() - t9))
 
 
 
