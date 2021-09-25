@@ -190,3 +190,37 @@ def pattern_i_tffunction_with_for_loop(buggy_node, tree):
             node.body.insert(0, exprNode)
 
     return tree
+
+
+def pattern_j_historgram_summary_bug(buggy_node, tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.histogram_summary        --------->             tf.summary.histogram
+    """
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.func.value.attr = "summary"
+            node.func.attr = "histogram"
+
+    return tree
+
+
+def pattern_k_historgram_summary_bug(buggy_node, tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.scalar_summary      --------->             tf.summary.scalar
+    """
+    for node in ast.walk(tree):
+        # we need to check if it is the buggy node found by the bug finder
+        if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
+            node.func.value.attr = "summary"
+            node.func.attr = "scalar"
+
+    return tree

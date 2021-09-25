@@ -115,12 +115,12 @@ def pattern_f_summary_writer_bug(tree):
 
     tf.train.SummaryWriter         --------->             tf.summary.FileWriter
     """
-    summary_writer_list = []
+    instance_list = []
     summary_writer_func_calls, summary_writer_arguments = get_func_calls('SummaryWriter', tree)
     for i in range(len(summary_writer_func_calls)):
-        summary_writer_list.append(summary_writer_func_calls[i])
+        instance_list.append(summary_writer_func_calls[i])
 
-    return summary_writer_list
+    return instance_list
 
 
 def pattern_g_last_dense_binary_bug(tree):
@@ -220,6 +220,40 @@ def pattern_i_tffunction_with_for_loop(tree):
                                             tffunction_pattern_list.append(node)
 
     return tffunction_pattern_list
+
+
+def pattern_j_historgram_summary_bug(tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.histogram_summary        --------->             tf.summary.histogram
+    """
+    instance_list = []
+    depr_func_calls, summary_writer_arguments = get_func_calls('histogram_summary', tree)
+    for i in range(len(depr_func_calls)):
+        instance_list.append(depr_func_calls[i])
+
+    return instance_list
+
+
+def pattern_k_scalar_summary_bug(tree):
+    """
+    As Tensorflow changes through versions, many API calls become deprecated. This
+    is an example of an API call that is no longer supported with the update to
+    Tensorflow 1.0.
+
+    tf.scalar_summary        --------->             tf.summary.scalar
+    """
+    instance_list = []
+    depr_func_calls, summary_writer_arguments = get_func_calls('scalar_summary', tree)
+    for i in range(len(depr_func_calls)):
+        instance_list.append(depr_func_calls[i])
+
+    return instance_list
+
+
 
 
 
