@@ -118,11 +118,11 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     threads = tf.train.start_queue_runners(sess=sess)
     input_x = sess.graph.get_tensor_by_name("input:0")
-    print input_x
+    print(input_x)
     out_softmax = sess.graph.get_tensor_by_name("softmax:0")
-    print out_softmax
+    print(out_softmax)
     fc = sess.graph.get_tensor_by_name("fullconnection1:0")
-    print fc
+    print(fc)
 
     for step in range(Training_iterations + 1):
         train_x, train_y = sess.run([train_x_batch, train_y_batch])
@@ -135,12 +135,12 @@ with tf.Session() as sess:
 
 
 
-        if train_x[0][1][1100][0] == 1 * 6:  # 0.5s
-
-
-        else if train_x[0][1][1100][0] == 2 * 6:  # 1s
-
-        else:  # 2s  else is needed
+        # if train_x[0][1][1100][0] == 1 * 6:  # 0.5s
+        #
+        #
+        # elif train_x[0][1][1100][0] == 2 * 6:  # 1s
+        #
+        # else:  # 2s  else is needed
 
         out_fc = sess.run(fc, feed_dict={input_x: train_x})
 

@@ -1,6 +1,8 @@
 #-*-coding=utf-8-*-
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
+import time
+t0 = time.time()
 
 mnist = input_data.read_data_sets('MNIST_data/', one_hot=True)
 log_dir='/home/dmrf/tensorflow_gesture_data/Log'
@@ -106,3 +108,4 @@ with tf.Session() as sess:
 
     # Final Test
     print('Test Accuracy', sess.run(accuracy, feed_dict={x: mnist.test.images, y_label: mnist.test.labels}))
+    print(time.time() - t0)

@@ -22,11 +22,11 @@ def FixWeightCnn():
         sess.run(init)
 
         input_x = sess.graph.get_tensor_by_name("input:0")
-        print input_x
+        print(input_x)
         out_softmax = sess.graph.get_tensor_by_name("softmax:0")
-        print out_softmax
+        print(out_softmax)
         fc = sess.graph.get_tensor_by_name("fullconnection1:0")
-        print fc
+        print(fc)
 
 
 if __name__ == '__main__':
