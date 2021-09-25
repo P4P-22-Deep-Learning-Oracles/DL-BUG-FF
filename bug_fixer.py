@@ -151,7 +151,7 @@ def pattern_h_softmax_with_cross_entropy_bug(crossEntityObject, tree):
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Assign) and ast.dump(node) == ast.dump(crossEntityObject.cross_entropy_node):
-            newNodeValue = ast.Call(ast.Name('tf.nn.softmax_cross_entropy_with_Logits', ast.Load()), [crossEntityObject.logits, crossEntityObject.nameLabel_var],[])
+            newNodeValue = ast.Call(ast.Name('tf.nn.softmax_cross_entropy_with_logits', ast.Load()), [crossEntityObject.logits, crossEntityObject.nameLabel_var],[])
             ast.copy_location(newNodeValue, node.value)
             node.value = newNodeValue
             print("I am here")
