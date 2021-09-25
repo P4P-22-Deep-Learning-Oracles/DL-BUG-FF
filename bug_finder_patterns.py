@@ -203,8 +203,9 @@ def pattern_i_tffunction_with_for_loop(tree):
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
             for decorator in node.decorator_list:
-                if decorator.attr == 'function' and decorator.value.id == 'tf':
-                    tffunction_function_names.append(node.name)
+                if isinstance(decorator, ast.Attribute):
+                    if decorator.attr == 'function' and decorator.value.id == 'tf':
+                        tffunction_function_names.append(node.name)
 
     if len(tffunction_function_names) == 0:
         return tffunction_pattern_list
