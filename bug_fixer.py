@@ -93,10 +93,8 @@ def pattern_e_merge_all_summaries_bug(buggy_node, tree):
     is an example of an API call that is no longer supported with the update to
     Tensorflow 1.0.
 
-    tf.merge_all_summaries should now be tf.summary.merge_all
+    tf.merge_all_summaries ----> tf.summary.merge_all
     """
-    print("Fixing this API misuse where merge_all_summaries is called")
-
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
@@ -133,7 +131,7 @@ def pattern_g_last_dense_binary_bug(buggy_node, tree):
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-            node.args[0].value = 2
+            node.args[0].value = 1
 
     return tree
 
@@ -203,13 +201,12 @@ def pattern_j_historgram_summary_bug(buggy_node, tree):
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-            node.func.value.attr = "summary"
-            node.func.attr = "histogram"
+            node.func.attr = "summary.histogram"
 
     return tree
 
 
-def pattern_k_historgram_summary_bug(buggy_node, tree):
+def pattern_k_scalar_summary_bug(buggy_node, tree):
     """
     As Tensorflow changes through versions, many API calls become deprecated. This
     is an example of an API call that is no longer supported with the update to
@@ -220,7 +217,6 @@ def pattern_k_historgram_summary_bug(buggy_node, tree):
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
-            node.func.value.attr = "summary"
-            node.func.attr = "scalar"
+            node.func.attr = "summary.scalar"
 
     return tree
