@@ -1,0 +1,68 @@
+#J : java app
+#P : python app
+#R : R script
+
+use queries to create tables and export txt files (e.g. php)
+php_a_tag.txt
+php_Q_A.txt
+php_q_tag.txt
+
+
+
+--------- Word Embedding -----------
+
+
+P#: run golden_creator.py ti get golden set for a tag (7 and 0.4 for php params)
+
+
+#J: Index posts for a tag (use IndexTagPost button)
+rename folder to "index"
+#J: Use GetForMallet button to get mallet input (Data/mallet.txt)
+
+# run mallet:
+############ linux command:
+./bin/mallet import-file --input ~/Desktop/mallet.txt --output ~/Desktop/res.mallet --keep-sequence --remove-stopwords
+
+./bin/mallet train-topics --input java_posts.mallet --num-topics 100 --output-doc-topics java_100_topics.txt --topic-word-weights-file java_100_weight.txt --word-topic-counts-file java_100_count.txt
+
+##########windows mallet command:
+.\bin\mallet.bat import-file --input C:\Users\Arash\Desktop\posts.txt --output C:\Users\Arash\Desktop\res.mallet --keep-sequence --remove-stopwords
+
+.\bin\mallet.bat train-topics --input C:\Users\Arash\Desktop\php_posts.mallet --num-topics 100 --output-doc-topics C:\Users\Arash\Desktop\php_100_topics.txt --topic-word-weights-file C:\Users\Arash\Desktop\php_100_weight.txt --word-topic-counts-file C:\Users\Arash\Desktop\php_100_count.txt
+
+Then:
+#J: run NGram to get 1 Gram List (data/grams/1gram.csv)
+copy it to python data folder
+and copy php_100_count.txt from mallet to python data/mallet folder
+P#: run get_top_word.py to extract top frequent words in 1gram
+P#: run get_weights.py to create vectors.txt file
+P#: run one_gram_vector_match.py to get 1gram_final
+copy 1gram_final.csv to java data/grams folder
+also edit NGramTFIDF.java and ClusterTranslate.java and add tags for skill area in constructor (from database table)
+J#: run 1 GRAM tf/idf to get TF.csv and TFIDF.csv
+copy these files to python data/grams folder
+P#: run doc_len_finder.py to get doc_len.txt
+
+P#: edit deep_transalteion_new.py or deep_transalteion_new_bias.py file and add tags set for skill area (from database table)
+P#: run deep_transalteion_new.py or deep_transalteion_new_bias.py to get final_res.txt
+rename final_res.txt to deep_result.txt and put in java program
+J#: run deep translation fixer to get translations
+J#: run blender to get final results
+
+
+
+
+
+
+--------- Clustering -----------
+set main_tag in jaccard_distancer.py
+edit jaccard_distancer.py and set main_tag
+P#: run jaccard_distancer.py to get jaccard dist
+R#: run cluster.r to create clusters and put res_tag.csv in cluster/data folder
+edit tag_group.py and set tag
+P#: run tag_group.py to get cluster_tag_final.csv
+copy result to java data/cluster
+if you have not created 1grams, create them
+you also need get_top_word.py results copied to data/cluster folder
+J#: run cluster translations, in case of error increase xms size and add -XX:-UseGCOverheadLimit to JVM run
+
