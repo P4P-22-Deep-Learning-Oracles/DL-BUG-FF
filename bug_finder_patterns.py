@@ -257,6 +257,45 @@ def pattern_k_scalar_summary_bug(tree):
     return instance_list
 
 
+def pattern_l_eval_never_ends(tree):
+    """
+    You must call tf.train.start_queue_runners(sess) before you call train_data.eval() or train_labels.eval().
+
+    This is a(n unfortunate) consequence of how TensorFlow input pipelines are implemented: the tf.train.string_input_producer(),
+    tf.train.shuffle_batch(), and tf.train.batch() functions internally create queues that buffer records between different
+    stages in the input pipeline. The tf.train.start_queue_runners() call tells TensorFlow to start fetching records into these buffers;
+    without calling it the buffers remain empty and eval() hangs indefinitely.
+
+
+    """
+    class EvalObject:
+        def __init__(self, session, eval_node):
+            self.session = session
+            self.eval_node = eval_node
+
+    eval_list = []
+    start_queue_runners_func_calls, start_queue_runners_arguments = get_func_calls('start_queue_runners', tree)
+    eval_func_calls, eval_arguments = get_func_calls('eval', tree)
+
+    if len(eval_func_calls) == 0:
+        return eval_list
+    elif len(start_queue_runners_func_calls) > 0:
+        return eval_list
+
+    session_assign_nodes = get_assign_nodes_using_func('InteractiveSession', tree)
+
+    session_assign_node = None
+    for sess_node in session_assign_nodes:
+        if sess_node.end_lineno < eval_func_calls[0].end_lineno:
+            session_assign_node = sess_node
+        else:
+            break
+
+    eval_list.append(EvalObject(session_assign_node, eval_func_calls[0]))
+    return eval_list
+
+
+
 
 
 
