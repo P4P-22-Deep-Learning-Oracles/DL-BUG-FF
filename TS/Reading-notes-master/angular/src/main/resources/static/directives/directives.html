@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directives</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script>
+        angular.module("exampleApp", [])
+        .directive("unorderedList", function() {
+            return function(scope, element, attrs) {
+                var listElem = angular.element("<ul>");
+                element.append(listElem);
+
+                var data = scope[attrs["unorderedList"]];
+                //var propertyName = attrs["listProperty"];
+                var propertyExpression = attrs["listProperty"];
+
+                if (angular.isArray(data)) {
+                    for (var i = 0; i < data.length; ++i) {
+                        //listElem.append(angular.element('<li>').text(data[i].name));
+                        //listElem.append(angular.element('<li>').text(data[i][propertyName]));
+                        //listElem.append(angular.element('<li>').text(scope.$eval(propertyExpression, data[i])));
+
+
+                        (function() {
+                            var itemElement = angular.element('<li>');
+                            listElem.append(itemElement);
+
+                            var index = i;
+                            var watcherFn = function (watchScope) {
+                                return watchScope.$eval(propertyExpression, data[index]);
+                            }
+
+                            scope.$watch(watcherFn, function(newValue, oldValue){
+                                itemElement.text(newValue);
+                            });
+                        }());
+
+                        
+                    }
+                } 
+            };
+        })
+        .controller("defaultCtrl", function ($scope) {
+            $scope.products = [
+            {name: "Apples", category: "Fruit", price: 1.20, expiry: 10},
+            {name: "Bananas", category: "Fruit", price: 2.42, expiry: 7},
+            {name: "Pears", category: "Fruit", price: 2.02, expiry: 6},
+
+            {name: "Tuna", category: "Fish", price: 20.45, expiry: 3},
+            {name: "Salmon", category: "Fish", price: 17.93, expiry: 2},
+            {name: "Trout", category: "Fish", price: 12.93, expiry: 4},
+
+            {name: "Bear", category: "Drinks", price: 2.99, expiry: 365},
+            {name: "Wine", category: "Drinks", price: 8.99, expiry: 365},
+            {name: "Whiskey", category: "Drinks", price: 45.99, expiry: 365}
+            ];
+
+
+            $scope.incrementPrices = function () {
+                for (var i = 0; i < $scope.products.length; ++i) {
+                    $scope.products[i].price++;
+                }
+            }
+
+        });
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Products</h3>
+        </div>
+
+        <div class="panel-body">
+            <button class="btn btn-primary" ng-click="incrementPrices()">
+                Change Prices
+            </button>
+        </div>
+
+        <div class="panel-body">
+            <!-- <div unordered-list="products" list-property="name"></div> -->
+            <div unordered-list="products" list-property="price | currency"></div>
+        </div>
+    </div>
+</body>
+</html>

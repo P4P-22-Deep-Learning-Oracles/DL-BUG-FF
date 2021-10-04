@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>表单 form</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <form role="form">
+        <fieldset>
+            <input type="text" class="form-control" />
+            <textarea class="form-control" rows="5">Hello World</textarea>
+
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="">
+                    橘子
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="">
+                    香蕉
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input name="sex" type="radio" checked>
+                    男
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input name="sex" type="radio" checked>
+                    女
+                </label>
+            </div>
+
+            <select class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+
+            <hr>
+
+            <select multiple class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+
+            <p class="form-control-static">请按照我的格式输入：helloworld@qq.com</p>
+
+            <input class="form-control" type="text" placeholder="helloworld" disabled>
+
+            <input class="form-control" type="text" placeholder="helloworld" readonly>
+        </fieldset>
+    </form>
+</div>
+</body>
+</html>

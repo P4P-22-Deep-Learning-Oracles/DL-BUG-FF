@@ -1,0 +1,74 @@
+# Server settings  
+server:  
+    port: 8080
+  
+# DATASOURCE
+spring:
+    http:
+        encoding.charset: UTF-8
+        encoding.force: true
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://47.90.107.224:3306/biyibi?useUnicode=true&characterEncoding=utf-8
+        username: biyibi
+        password: mlxjAIBl9EGUiJ3g
+        initialSize: 5
+        minIdle: 5
+        maxActive: 200
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: false
+#        maxPoolPreparedStatementPerConnectionSize: 20
+#        filters: stat
+    redis:
+        host: 115.159.34.159
+        password: redistest
+        port: 6379
+        database: 1
+        pool:
+            max-idle: 8
+            min-idle: 1
+            max-active: 8
+            max-wait: -1
+
+#thymeleaf
+    thymeleaf:
+        mode: HTML5
+        encoding: UTF-8
+        content-type: text/html
+        cache: false
+
+# MyBatis  
+mybatis:  
+    typeAliasesPackage: com.sirius.angular.mapper
+    mapperLocations: classpath*:mybatis/sqlmap/*Mapper*.xml
+    configLocation: classpath:mybatis/mybatis-config.xml
+
+#Ftp
+ftp:
+    hostname: 115.159.34.159
+    port: 21
+    username: ftpuser
+    password: ftpuser123
+    path: ./data/certification
+
+
+# LOGGING  
+logging:  
+    level:
+        root: info
+        com.sirius.angular.mapper: debug
+
+web-app:
+    welcome-file-list:
+        welcome-file: index.html
+
+jwt:
+    base64Security: base64Security
+    ignore: true

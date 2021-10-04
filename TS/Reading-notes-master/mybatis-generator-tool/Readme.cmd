@@ -1,0 +1,1 @@
+java -jar mybatis-generator-core-1.3.3.jar -configfile configuration.xml

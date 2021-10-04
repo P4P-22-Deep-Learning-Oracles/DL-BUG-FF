@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Bootstrap Examples</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css">
+    <style>
+        #gridContainer {padding: 20px;}
+        .grid-row > div {border: 1px solid lightgrey; padding: 10px;
+                         background-color: aliceblue; margin: 5px 0;}
+    </style>
+</head>
+<body>
+    <div class="pannel">
+        <h3 class="pannel-heading">Button Styles</h3>
+        <button class="btn">Basic Button</button>
+        <button class="btn btn-primary">Primary</button>
+        <button class="btn btn-success">Success</button>
+        <button class="btn btn-warning">Warning</button>
+        <button class="btn btn-info">Info</button>
+        <button class="btn btn-danger">Danger</button>
+    </div>
+    <div class="well">
+        <h3 class="pannel-heading">Button Sizes</h3>
+        <button class="btn btn-large btn-success">Large Success</button>
+        <button class="btn btn-warning">Standard Warning</button>
+        <button class="btn btn-small btn-danger">Small Danger</button>
+    </div>
+    <div class="well">
+        <h3 class="pannel-heading">Block Buttons</h3>
+        <button class="btn btn-block btn-large btn-success">Large Block Success</button>
+        <button class="btn btn-block btn-warning">Standard Block Warning</button>
+        <button class="btn btn-block btn-small btn-info">Small Block Infor</button>
+    </div>
+    <div class="pannel">
+        <h3 class="pannel-heading">Standard Table with Context</h3>
+        <table class="table">
+            <tr><th>Contry</th><th>Capital City</th></tr>
+            <tr class="success"><td>United Kingdom</td><td>London</td></tr>
+            <tr class="danger"><td>France</td><td>Paris</td></tr>
+            <tr><td>Spain</td><td class="warning">Madrid</td></tr>
+        </table>
+    </div>
+    <div class="pannel">
+        <h3 class="pannel-heading">Striped, Bordered and Highlighted Table</h3>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr><th>Contry</th><th>Capital City</th></tr>
+                <tr><td>United Kingdom</td><td>London</td></tr>
+                <tr><td>France</td><td>Paris</td></tr>
+                <tr><td>Spain</td><td>Madrid</td></tr>
+            </thead>
+        </table>
+    </div>
+    <div class="pannel">
+        <h3 class="pannel-header">Form Elements</h3>
+        <div class="from-group">
+            <label>Name:</label>
+            <input type="form-control" name="name">
+        </div>
+
+        <div class="from-group">
+            <label>Email:</label>
+            <input type="form-control" name="email">
+        </div>
+
+        <div class="radio">
+            <label>
+                <input type="radio" name="junkmail" value="yes" checked />
+                Yes, send me endless junk mail
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+                <input type="radio" name="junkmail" value="no"/>
+                No, I never want to hear from you again
+            </label>
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" checked/>
+                I agree to the terms and conditions.
+            </label>
+        </div>
+
+        <input type="button" name="btn btn-primary" value="Subscribe">
+    </div>
+    <div class="pannel">
+        <h3 class="pannel-header">Grid Layout</h3>
+        <div id="gridContainer">
+            <div class="row grid-row">
+                <div class="col-xs-2">2</div>
+                <div class="col-xs-1">1</div>
+                <div class="col-xs-2">2</div>
+                <div class="col-xs-2">2</div>
+                <div class="col-xs-6">6</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-xs-3">3</div>
+                <div class="col-xs-4">4</div>
+                <div class="col-xs-5">5</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-xs-6">6</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-xs-11">11</div>
+                <div class="col-xs-1">1</div>
+            </div>
+        </div>
+    </div>
+    <div class="pannel">
+        <h3 class="pannel-header">Grid Layout</h3>
+        <div id="gridContainer">
+            <div class="row grid-row">
+                <div class="col-sm-1">1</div>
+                <div class="col-sm-1">1</div>
+                <div class="col-sm-2">2</div>
+                <div class="col-sm-2">2</div>
+                <div class="col-sm-6">6</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-sm-3">3</div>
+                <div class="col-sm-4">4</div>
+                <div class="col-sm-5">5</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-sm-6">6</div>
+            </div>
+
+            <div class="row grid-row">
+                <div class="col-sm-11">11</div>
+                <div class="col-sm-1">1</div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

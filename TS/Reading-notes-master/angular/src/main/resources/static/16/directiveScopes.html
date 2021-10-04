@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directive Scopes</title>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap-theme.css" />
+    <script src="../angular.min.js"></script>
+    <script type="text/ng-template" id="scopeTemplate">
+        <div class="panel-body">
+            <p>Name: <input ng-model="data.name" /></p>
+            <p>City: <input ng-model="city" /></p>
+            <p>Country: <input ng-model="country" /></p>
+
+            <p>Data Value:{{local}}</p>
+        </div>
+    </script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+        .directive("scopeDemo", function () {
+            return {
+                // template: "<div class='panel-body'>Name:<input ng-model='name' /></div>",
+                template: function() {
+                    return angular.element(document.querySelector('#scopeTemplate')).html();
+                },
+                // scope: true
+                scope: {
+                    local: "@nameprop"
+                }
+
+            }
+        })
+        .controller("scopeCtrl", function($scope) {
+            $scope.data = {name : "Adam"};
+            $scope.city = "London";
+        });
+    </script>
+</head>
+<body>
+    <div ng-controller="scopeCtrl" class="panel panel-default">
+        <div class="panel-body" scope-demo></div>
+        <div class="panel-body" scope-demo></div>
+    </div>
+
+    <div ng-controller="scopeCtrl" class="panel panel-default">
+        <div class="panel-body">
+            Direct Binding: <input ng-model="data.name" />
+        </div>
+        <div class="panel-body" scope-demo nameprop="{{data.name}}"></div>
+    </div>
+</body>
+</html>

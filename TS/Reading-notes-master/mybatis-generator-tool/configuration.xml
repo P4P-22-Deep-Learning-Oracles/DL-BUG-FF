@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- java -jar mybatis-generator-core-1.3.3.jar -configfile Configuration.xml -->
+<generatorConfiguration>
+  <classPathEntry location="D:\Reading-notes\mybatis-generator-tool\mysql-connector-java-5.1.39-bin.jar" />	
+  <context id="MysqlTables" targetRuntime="MyBatis3">
+
+	
+    <property name="javaFileEncoding" value="UTF-8"/>
+	
+    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+        connectionURL="jdbc:mysql://47.90.107.224:3306/biyibi"
+        userId="biyibi"
+        password="mlxjAIBl9EGUiJ3g">
+    </jdbcConnection>
+	
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.sirius.angular.entity" targetProject="src">
+      <property name="enableSubPackages" value="true" />
+      <property name="trimStrings" value="true" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="sqlmap"  targetProject="src">
+      <property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.sirius.angular.mapper"  targetProject="src">
+      <property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+
+    <table tableName="product" domainObjectName="Product" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">  
+    </table>
+  </context>
+</generatorConfiguration>
