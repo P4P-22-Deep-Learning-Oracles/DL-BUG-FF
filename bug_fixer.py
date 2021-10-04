@@ -152,7 +152,6 @@ def pattern_h_softmax_with_cross_entropy_bug(crossEntityObject, tree):
             newNodeValue = ast.Call(ast.Name('tf.nn.softmax_cross_entropy_with_logits', ast.Load()), [crossEntityObject.logits, crossEntityObject.nameLabel_var],[])
             ast.copy_location(newNodeValue, node.value)
             node.value = newNodeValue
-            print("I am here")
 
     return tree
 
@@ -170,7 +169,6 @@ def pattern_i_tffunction_with_for_loop(buggy_node, tree):
 
     # we need to record where the for statement is located to insert the step function afterwards
 
-    flag = False
     for node in ast.walk(tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.For) and ast.dump(buggy_node) == ast.dump(node):
@@ -218,5 +216,43 @@ def pattern_k_scalar_summary_bug(buggy_node, tree):
         # we need to check if it is the buggy node found by the bug finder
         if isinstance(node, ast.Call) and ast.dump(node) == ast.dump(buggy_node):
             node.func.attr = "summary.scalar"
+
+    return tree
+
+def pattern_l_eval_never_ends(buggy_node, tree):
+    """
+    You must call tf.train.start_queue_runners(sess) before you call train_data.eval() or train_labels.eval().
+
+    This is a(n unfortunate) consequence of how TensorFlow input pipelines are implemented: the tf.train.string_input_producer(),
+    tf.train.shuffle_batch(), and tf.train.batch() functions internally create queues that buffer records between different
+    stages in the input pipeline. The tf.train.start_queue_runners() call tells TensorFlow to start fetching records into these buffers;
+    without calling it the buffers remain empty and eval() hangs indefinitely.
+
+    tf.train.start_queue_runners(sess)
+    """
+    # for node in ast.walk(tree):
+    #     try:
+    #         node.lineno = None
+    #         node.end_lineno = None
+    #         node.col_offset = None
+    #         node.end_col_offset = None
+    #
+    #     except AttributeError:
+    #         continue
+
+    count = 0
+    for node in tree.body:
+        count += 1
+        try:
+            if ast.dump(node.value) == ast.dump(buggy_node.eval_node):
+                break
+        except AttributeError:
+            continue
+    sessionId = buggy_node.session.targets[0].id
+    # lineNum = buggy_node.eval_node.lineno
+    arg1 = ast.Name(sessionId, ast.Load())
+    callNode = ast.Call(ast.Name('tf.train.start_queue_runners', ast.Load()), [arg1], [])
+    exprNode = ast.Expr(callNode)
+    tree.body.insert(19,exprNode)
 
     return tree
