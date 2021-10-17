@@ -1,0 +1,1 @@
+Rename the folder you want to use (data_java or data_php) to data and put it at the program folder
