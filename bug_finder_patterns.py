@@ -19,7 +19,6 @@ def pattern_a_bug_finder_example(tree):
     same Tensorflow program.
 
     """
-    print("Searching for the API misuse that assign units to keras.layers.Dense that are not multiple of 32......  ")
     func_calls, arguments = get_func_calls('keras.layers.Dense', tree)
     # In case you want to print and see how it looks like
     # astpretty.pprint(func_calls[0])
@@ -35,7 +34,6 @@ def pattern_a_bug_finder_example(tree):
                                 print(ast.unparse(func_calls[i]), " ", int(args[0].value), "should be a multiple of 32")
                                 # we return the first function call that represent this specific API misuse
                                 return func_calls[i]
-    print("did not find any API misuses!")
     return None
 
 
@@ -48,6 +46,8 @@ def pattern_b_decode_png_no_resize_bug(tree):
     To solve this issue we will be checking for instances of decode_jpeg() and trying
     to replace them with decode_image() instead, which generally works for both .jpeg
     and .png files.
+
+    Error
     """
     print("Searching for API misuse where decode_jpeg is called for files of type PNG")
     decode_jpeg_list = []
@@ -284,6 +284,7 @@ def pattern_l_eval_never_ends(tree):
 
     session_assign_nodes = get_assign_nodes_using_func('InteractiveSession', tree)
 
+    print("API misuse found for eval_never_ends!")
     session_assign_node = None
     for sess_node in session_assign_nodes:
         if sess_node.end_lineno < eval_func_calls[0].end_lineno:

@@ -230,16 +230,6 @@ def pattern_l_eval_never_ends(buggy_node, tree):
 
     tf.train.start_queue_runners(sess)
     """
-    # for node in ast.walk(tree):
-    #     try:
-    #         node.lineno = None
-    #         node.end_lineno = None
-    #         node.col_offset = None
-    #         node.end_col_offset = None
-    #
-    #     except AttributeError:
-    #         continue
-
     count = 0
     for node in tree.body:
         count += 1
@@ -249,10 +239,9 @@ def pattern_l_eval_never_ends(buggy_node, tree):
         except AttributeError:
             continue
     sessionId = buggy_node.session.targets[0].id
-    # lineNum = buggy_node.eval_node.lineno
     arg1 = ast.Name(sessionId, ast.Load())
     callNode = ast.Call(ast.Name('tf.train.start_queue_runners', ast.Load()), [arg1], [])
     exprNode = ast.Expr(callNode)
-    tree.body.insert(19,exprNode)
+    tree.body.insert(count-1, exprNode)
 
     return tree
