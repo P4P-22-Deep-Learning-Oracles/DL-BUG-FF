@@ -16,7 +16,7 @@ def run_once(f):
     return wrapper
 
 def load_source_code(filename):
-    with open(filename, "r") as source:
+    with open(filename, "r", encoding="utf-8") as source:
         tree_ting = ast.parse(source.read())
 
     return tree_ting
